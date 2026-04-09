@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>EMERGENCE</title>
+        <link rel="manifest" href="/manifest.json">
+        <link rel="stylesheet" href="/css/style.css">
+        <!--
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        -->
+        <link rel="stylesheet" href="/libs/leaflet.css">
+        <script src="/libs/leaflet.js"></script>
+        <script type="module" src="js/firebase-init.js"></script>
+    </head>
+    <body>
+        <header>
+            <div id="logo">
+                <h1>EMERGENCE</h1>
+                <p>Área Metropolitana de Guadalajara</p>
+            </div>
+            <div id="estado-live">
+                <span id="indicador">● online</span>
+            </div>
+        </header>
+
+        <main>
+            <div id="mapa">
+            </div>
+
+            <aside id="panel-datos">
+                <section id="seccion-precipitacion">
+                    <h3>PRECIPITACION ACTUAL</h3>
+                    <h2 id="nivel-riesgo">Cargando...</h2>
+                    <p id="precipitacion">Obteniendo datos...</p>
+                </section>
+
+                <section id="seccion-riesgo">
+                    <h3>ESTADO DEL SISTEMA</h3>
+                    <div id="simbología">
+                        <p>🔴 Prioridad Alta</p>
+                        <p>🟠 Prioridad Media</p>
+                        <p>🟡 Prioridad Baja</p>
+                    </div>
+                </section>
+            </aside>
+        </main>
+
+        <script type="module" src="js/app.js"></script>
+        </body>
+</html>

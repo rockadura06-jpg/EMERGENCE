@@ -1,0 +1,6 @@
+cd backend
+echo "fastapi
+uvicorn
+squalchemy
+apscheduler
+httpx" < requeriments.txt
