@@ -65,7 +65,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(mapa);
 
 function conectarSSE() {
-    const sse = new EventSource('http://192.168.1.14:8000/sse/zonas');
+    const sse = new EventSource('https://emergence-backend-id2q.onrender.com/sse/zonas');
     sse.onmessage = (event) => {
         const zonas = JSON.parse(event.data);
         if(zonas.length > 0) actualizarMapa(zonas);
