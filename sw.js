@@ -17,7 +17,7 @@ self.addEventListener('install', (event) => {
     );
 });
 
-self.addEventListener('active', (event) => {
+self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((keylist) => {
             return Promise.all(keylist.map((key) => {
