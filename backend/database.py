@@ -20,3 +20,11 @@ class ZonaRiesgo(Base):
 
 def init_db():
     Base.metadata.create_all(bind=engine)
+
+def limpiar_db():
+    db = SessionLocal()
+    try:
+        db.query(ZonaRiesgo).delete()
+        db.commit()
+    finally:
+        db.close()

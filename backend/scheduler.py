@@ -4,22 +4,20 @@ from database import SessionLocal, ZonaRiesgo
 from datetime import datetime
 
 ZONAS = [
-    {"nombre": "Centro GDL / Analco",  "lat": 20.6597, "lon": -103.3496},
-    {"nombre": "Puerta de Hierro",     "lat": 20.7150, "lon": -103.4100},
-    {"nombre": "Zapopan Centro",       "lat": 20.7214, "lon": -103.3916},
-    {"nombre": "Tlaquepaque Centro",   "lat": 20.6419, "lon": -103.3108},
-    {"nombre": "Las Águilas / ITESO",  "lat": 20.5983, "lon": -103.4200},
-    {"nombre": "Huentitán / Barranca", "lat": 20.7100, "lon": -103.3200},
+    { "nombre": "Av. Inglaterra y Niños Héroes",       "lat":20.6665 , "lon":-103.3787},
+    { "nombre": "La Martinica, Zapopan",                "lat":20.7452 , "lon":-103.3667 },
+    { "nombre": "Héroes Ferrocarrileros y Washington",  "lat":20.6540 , "lon":-103.3462 },
+    { "nombre": "8 de Julio y Washington",              "lat":20.6593 , "lon":-103.3562 },
+    { "nombre": "Colón y Washington",                   "lat":20.6610 , "lon":-103.3575 },
+    { "nombre": "Lázaro Cárdenas y Mariano Otero",     "lat":20.6319 , "lon":-103.4478 },
+    { "nombre": "El Deán (Vaso regulador)",             "lat":20.6376 , "lon":-103.3468 },
+    { "nombre": "Zona Expo",                            "lat":20.6529 , "lon":-103.3918 },
+    { "nombre": "Las Juntitas, Tlaquepaque",            "lat":20.6078 , "lon":-103.3313 },
+    { "nombre": "Los Amiales, Tonalá",                  "lat":20.6722 , "lon":-103.2289 },
+    { "nombre": "Los Manzanos, Zapotlanejo",            "lat":20.6139 , "lon":-103.0780 },
+    { "nombre": "Av. México y López Mateos",          "lat":20.6797 , "lon":-103.3851 }
 ]
 
-def calcular_nivel(precipitacion):
-    if precipitacion == 0:
-        return "bajo"
-    elif precipitacion < 5:
-        return "medio"
-    else:
-        return "alto"
-    
 async def consultar_open_meteo():
     db = SessionLocal()
     try:
@@ -33,7 +31,7 @@ async def consultar_open_meteo():
                 response = await client.get(url)
                 data = response.json()
                 precipitacion = data["hourly"]["precipitation"][0]
-                nivel = calcular_nivel(precipitacion)
+                nivel = "sin_calcular"
 
                 registro = ZonaRiesgo(
                     nombre = zona["nombre"],

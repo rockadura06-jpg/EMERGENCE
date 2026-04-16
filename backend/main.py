@@ -1,4 +1,4 @@
-from database import init_db, SessionLocal, ZonaRiesgo
+from database import init_db, SessionLocal, ZonaRiesgo, limpiar_db
 from scheduler import scheduler, consultar_open_meteo
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,6 +22,7 @@ def root():
 @app.on_event("startup")
 async def startup():
     init_db()
+    limpiar_db()
     scheduler.start()
     await consultar_open_meteo()
 
@@ -37,7 +38,7 @@ async def sse_zonas():
             while True:
                 zonas = db.query(ZonaRiesgo).order_by(
                     ZonaRiesgo.timestamp.desc()
-                ).limit(6).all()
+                ).limit(12).all()
 
                 data = [
                     {

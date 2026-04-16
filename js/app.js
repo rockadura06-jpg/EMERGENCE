@@ -5,22 +5,34 @@ if ('serviceWorker' in navigator) {
 }
 
 const ZONAS = [
-    { nombre: 'Centro GDL / Analco',     lat: 20.6597, lon: -103.3496, radio: 1200 },
-    { nombre: 'Puerta de Hierro',         lat: 20.7150, lon: -103.4100, radio: 1000 },
-    { nombre: 'Zapopan Centro',           lat: 20.7214, lon: -103.3916, radio: 1000 },
-    { nombre: 'Tlaquepaque Centro',       lat: 20.6419, lon: -103.3108, radio: 1000 },
-    { nombre: 'Las Águilas / ITESO',      lat: 20.5983, lon: -103.4200, radio: 1000 },
-    { nombre: 'Huentitán / Barranca',     lat: 20.7100, lon: -103.3200, radio: 1000 },
+    { nombre: 'Av. Inglaterra y Niños Héroes',          lat:20.6665 , lon:-103.3787 , radio: 300, alturaMax:6.00 },
+    { nombre: 'La Martinica, Zapopan',                  lat:20.7452 , lon:-103.3667 , radio: 300, alturaMax:5.00  },
+    { nombre: 'Héroes Ferrocarrileros y Washington',    lat:20.6540 , lon:-103.3462 , radio: 300, alturaMax:2.00  },
+    { nombre: '8 de Julio y Washington',                lat:20.6593 , lon:-103.3562 , radio: 300, alturaMax:2.00  },
+    { nombre: 'Colón y Washington',                     lat:20.6610 , lon:-103.3575 , radio: 300, alturaMax:2.00  },
+    { nombre: 'Lázaro Cárdenas y Mariano Otero',        lat:20.6319 , lon:-103.4478 , radio: 300, alturaMax:2.00  },
+    { nombre: 'El Deán (Vaso regulador)',               lat:20.6376 , lon:-103.3468 , radio: 300, alturaMax:1.25  },
+    { nombre: 'Zona Expo',                              lat:20.6529 , lon:-103.3918 , radio: 300, alturaMax:1.20  },
+    { nombre: 'Las Juntitas, Tlaquepaque',              lat:20.6078 , lon:-103.3313 , radio: 300, alturaMax:1.10  },
+    { nombre: 'Los Amiales, Tonalá',                    lat:20.6722 , lon:-103.2289 , radio: 300, alturaMax:0.70  },
+    { nombre: 'Los Manzanos, Zapotlanejo',              lat:20.6139 , lon:-103.0780 , radio: 300, alturaMax:0.60  },
+    { nombre: 'Av. México y López Mateos',              lat:20.6797 , lon:-103.3851 , radio: 300, alturaMax:0.50  }
 ];
 
-function calcularNivelRiesgo(precipitacion) {
-    if (precipitacion >= 30)
+function calcularProbabilidad(precipitacion, alturaMax) {
+    probabilidad = Math.min(1, (precipitacion / 50) * (alturaMax - 0.50) / (6.00 - 0.50))
+    return probabilidad
+}
+
+function clasificarRiesgoPorProbabilidad(probabilidad) {
+    if (probabilidad >= 0.7)
         return { nivel: 'alto',   color: '#ef4444', mensaje: 'Riesgo alto de inundación' };
-    if (precipitacion >= 10)
+    if (probabilidad >= 0.5)
         return { nivel: 'medio',  color: '#f97316', mensaje: 'Riesgo medio de inundación' };
-    if (precipitacion >= 2)
+    if (probabilidad >= 0.1)
         return { nivel: 'bajo',   color: '#eab308', mensaje: 'Riesgo bajo de inundación' };
-    return     { nivel: 'ninguno',color: '#22c55e', mensaje: 'Sin riesgo de inundación' };
+    
+    return { nivel: 'ninguno', color: '#22c55e', mensaje: 'Sin riesgo de inundación' };
 }
 
 const mapa = L.map('mapa').setView([20.6597, -103.3496], 12);
@@ -31,9 +43,10 @@ function actualizarMapa(zonas) {
     const horaActual = new Date().getHours();
 
     zonas.forEach(zona => {
-        const riesgo = calcularNivelRiesgo(zona.precipitacion);
         const zonaFrontend = ZONAS.find(z => z.nombre === zona.nombre);
         if (!zonaFrontend) return;
+        const probabilidad = calcularProbabilidad(zona.precipitacion, zonaFrontend.alturaMax);
+        const riesgo = clasificarRiesgoPorProbabilidad(probabilidad);
 
         if(circulos[zona.nombre]) {
             circulos[zona.nombre].setStyle({color: riesgo.color, fillColor: riesgo.color});
@@ -53,12 +66,15 @@ function actualizarMapa(zonas) {
         }
     });
 
-    const maxPrecip = Math.max(...zonas.map(z => z.precipitacion));
-    const riesgoGeneral = calcularNivelRiesgo(maxPrecip);
+    const maxProbabilidad = Math.max(...zonas.map(z => {
+    const zf = ZONAS.find(zona => zona.nombre === z.nombre);
+    return zf ? calcularProbabilidad(z.precipitacion, zf.alturaMax) : 0;
+    }));
+    const riesgoGeneral = clasificarRiesgoPorProbabilidad(maxProbabilidad);
     document.getElementById('nivel-riesgo').textContent = riesgoGeneral.mensaje;
     document.getElementById('nivel-riesgo').style.color = riesgoGeneral.color;
-    document.getElementById('precipitacion').textContent = `Lluvia máxima: ${maxPrecip} mm`;
-}       
+    document.getElementById('precipitacion').textContent = `Probabilidad máxima: ${(maxProbabilidad * 100).toFixed(1)}%`;
+}     
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
