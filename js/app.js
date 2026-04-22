@@ -92,6 +92,14 @@ function conectarSSE() {
     sse.onerror = () => console.error('Error de conexión SSE');
 }
 
+document.getElementById('toggle-zonas').addEventListener('click', () => {
+    const lista = document.getElementById('lista-zonas');
+    const btn = document.getElementById('toggle-zonas');
+    const visible = lista.style.display !== 'none';
+    lista.style.display = visible ? 'none' : 'block';
+    btn.textContent = visible ? 'ZONAS DE RIESGO ▼': 'ZONAS DE RIESGO ▲';
+});
+
 function actualizarPanel(zonas) {
     const contenedor = document.getElementById('lista-zonas');
     contenedor.innerHTML = '';
@@ -110,6 +118,9 @@ function actualizarPanel(zonas) {
             <span class="etiqueta-riesgo" style="color:${riesgo.color}">${riesgo.mensaje.toUpperCase()}</span>
             <p>${(probabilidad * 100).toFixed(1)}% de probabilidad</p>
         `;
+        tarjeta.addEventListener('click', () => {
+            mapa.setView([zonaFrontend.lat, zonaFrontend.lon], 15);
+        });
         contenedor.appendChild(tarjeta);
     });
 }
