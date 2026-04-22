@@ -93,7 +93,6 @@ function conectarSSE() {
 }
 
 function actualizarPanel(zonas) {
-    console.log('zonas recibidas:', zonas);
     const contenedor = document.getElementById('lista-zonas');
     contenedor.innerHTML = '';
 
