@@ -20,8 +20,8 @@ const ZONAS = [
 ];
 
 function calcularProbabilidad(precipitacion, alturaMax) {
-    const probabilidad = Math.min(1, (precipitacion / 50) * (alturaMax - 0.50) / (6.00 - 0.50))
-    return probabilidad
+    const probabilidad = Math.min(1, (precipitacion / 50) * (alturaMax - 0.50) / (6.00 - 0.50));
+    return probabilidad;
 }
 
 function clasificarRiesgoPorProbabilidad(probabilidad) {
@@ -66,28 +66,6 @@ function actualizarMapa(zonas) {
         }
     });
 
-    function actualizarPanel(zonas) {
-        const contenedor = document.getElementById('lista-zonas');
-        contenedor.innerHTML = '';
-
-        zonas.forEach(zona => {
-            const zonaFrontend = ZONAS.find(z => z.nomnbre === zona.nombre);
-            if (!zonaFronted) return;
-
-            const probabilidad = calcularProbabilidad(zona.precipitacion, zonaFrontend.alturaMax);
-            const riesgo = clasificarRiesgoPorProbabilidad(probabilidad);
-
-            const tarjeta = document.createElement('div');
-            tarjeta.className = `tarjeta-zona riesgo-${riesgo.nivel}`;
-            tarjeta.innerHTML = `
-                <h4>${zona.nombre}</h4>
-                <span class="etiqueta-riesgo" style="color:${riesgo.color}">${riesgo.mensaje.toUpperCase()}</span>
-                <p>${(probabilidad * 100).toFixed(1)}% de probabilidad</p>
-            `;
-            contenedor.appendChild(tarjeta);
-        });
-    }
-
     const maxProbabilidad = Math.max(...zonas.map(z => {
     const zf = ZONAS.find(zona => zona.nombre === z.nombre);
     return zf ? calcularProbabilidad(z.precipitacion, zf.alturaMax) : 0;
@@ -106,9 +84,35 @@ function conectarSSE() {
     const sse = new EventSource('https://emergence-backend-id2q.onrender.com/sse/zonas');
     sse.onmessage = (event) => {
         const zonas = JSON.parse(event.data);
-        if(zonas.length > 0) actualizarMapa(zonas);
+        if(zonas.length > 0){
+            actualizarMapa(zonas);
+            actualizarPanel(zonas);
+        }
     };
     sse.onerror = () => console.error('Error de conexión SSE');
+}
+
+function actualizarPanel(zonas) {
+    console.log('zonas recibidas:', zonas);
+    const contenedor = document.getElementById('lista-zonas');
+    contenedor.innerHTML = '';
+
+    zonas.forEach(zona => {
+        const zonaFrontend = ZONAS.find(z => z.nombre === zona.nombre);
+        if (!zonaFrontend) return;
+
+        const probabilidad = calcularProbabilidad(zona.precipitacion, zonaFrontend.alturaMax);
+        const riesgo = clasificarRiesgoPorProbabilidad(probabilidad);
+
+        const tarjeta = document.createElement('div');
+        tarjeta.className = `tarjeta-zona riesgo-${riesgo.nivel}`;
+        tarjeta.innerHTML = `
+            <h4>${zona.nombre}</h4>
+            <span class="etiqueta-riesgo" style="color:${riesgo.color}">${riesgo.mensaje.toUpperCase()}</span>
+            <p>${(probabilidad * 100).toFixed(1)}% de probabilidad</p>
+        `;
+        contenedor.appendChild(tarjeta);
+    });
 }
 
 conectarSSE();
