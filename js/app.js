@@ -36,13 +36,12 @@ function clasificarRiesgoPorProbabilidad(probabilidad) {
 }
 
 const mapa = L.map('mapa', {
-    minZoom: 11,
+    minZoom: 15,
     maxBounds: [
         [20.4, -103.6],
         [20.9, -103.1]
-    ],
-    maxBoundsViscosity: 1.0
-}).setView([20.6597, -103.3496], 15);
+    ]
+}).setView([20.6597, -103.3496], 12);
 let markerUsuario = null;
 navigator.geolocation.watchPosition(
     function(posicion) {
@@ -58,10 +57,10 @@ navigator.geolocation.watchPosition(
         }
 
         const iconoUsuario = L.divIcon({
-            html: '<div style="width:16px;height:16px;background:red;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5)"></div>',
+            html: '📍',
             className: '',
-            iconSize: [16, 16],
-            iconAnchor: [8, 8]
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
         });
 
         markerUsuario = L.marker([lat, lng], {icon:iconoUsuario})
