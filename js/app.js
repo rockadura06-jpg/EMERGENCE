@@ -35,7 +35,7 @@ function clasificarRiesgoPorProbabilidad(probabilidad) {
     return { nivel: 'ninguno', color: '#22c55e', mensaje: 'Sin riesgo de inundación' };
 }
 
-const mapa = L.map('mapa');
+const mapa = L.map('mapa').setView([20.6597, -103.3496], 12);
 let markerUsuario = null;
 navigator.geolocation.watchPosition(
     function(posicion) {
