@@ -40,7 +40,7 @@ navigator.geolocation.getCurrentPosition(
     function(posicion) {
         const lat = posicion.coords.latitude;
         const lng = posicion.coords.longitude;
-        mapa.setView([lat, lng], 13);
+        mapa.setView([lat, lng], 20);
     },
     function(error) {
         mapa.setView([20.6597, -103.3496], 12);
