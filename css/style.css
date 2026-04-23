@@ -116,6 +116,7 @@ section h3 {
     border-radius: 8px;
     padding: 10px 14px;
     margin-bottom: 8px;
+    cursor:pointer;
 }
 
 .tarjeta-zona h4 {
@@ -135,5 +136,4 @@ section h3 {
     font-size: 0.75rem;
     color: #666;
     margin-top: 4px;
-    cursor:pointer;
 }

@@ -50,8 +50,15 @@ navigator.geolocation.watchPosition(
             mapa.setView([lat, lng], 15);
         }
 
-        markerUsuario = L.marker([lat, lng])
-                        .bindPopup('📍 Tu ubicación')
+        const iconoUsuario = L.divIcon({
+            html: '📍',
+            className: '',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        });
+
+        markerUsuario = L.marker([lat, lng], {icon:iconoUsuario})
+                        .bindPopup('Tu ubicación')
                         .addTo(mapa);
     },
     function(error) {
