@@ -40,8 +40,9 @@ const mapa = L.map('mapa', {
     maxBounds: [
         [20.4, -103.6],
         [20.9, -103.1]
-    ]
-}).setView([20.6597, -103.3496], 12);
+    ],
+    maxBoundsViscosity: 1.0
+}).setView([20.6597, -103.3496], 15);
 let markerUsuario = null;
 navigator.geolocation.watchPosition(
     function(posicion) {
@@ -57,10 +58,10 @@ navigator.geolocation.watchPosition(
         }
 
         const iconoUsuario = L.divIcon({
-            html: '📍',
+            html: '<div style="width:16px;height:16px;background:red;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5)"></div>',
             className: '',
-            iconSize: [30, 30],
-            iconAnchor: [15, 30]
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
         });
 
         markerUsuario = L.marker([lat, lng], {icon:iconoUsuario})
