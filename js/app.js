@@ -36,7 +36,7 @@ function clasificarRiesgoPorProbabilidad(probabilidad) {
 }
 
 const mapa = L.map('mapa', {
-    minZoom: 15,
+    minZoom: 11,
     maxBounds: [
         [20.4, -103.6],
         [20.9, -103.1]
