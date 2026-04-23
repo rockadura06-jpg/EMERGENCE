@@ -36,13 +36,23 @@ function clasificarRiesgoPorProbabilidad(probabilidad) {
 }
 
 const mapa = L.map('mapa');
-navigator.geolocation.getCurrentPosition(
+let markerUsuario = null;
+navigator.geolocation.watchPosition(
     function(posicion) {
         const lat = posicion.coords.latitude;
         const lng = posicion.coords.longitude;
-        mapa.setView([lat, lng], 15);
-        L.marker([lat, lng]).addTo(mapa);
-        L.marker([lat, lng]).bindPopup('📍 Tu ubicación').addTo(mapa);
+
+        if(markerUsuario) {
+            markerUsuario.remove();
+        }
+
+        if (markerUsuario === null) {
+            mapa.setView([lat, lng], 15);
+        }
+
+        markerUsuario = L.marker([lat, lng])
+                        .bindPopup('📍 Tu ubicación')
+                        .addTo(mapa);
     },
     function(error) {
         mapa.setView([20.6597, -103.3496], 12);
