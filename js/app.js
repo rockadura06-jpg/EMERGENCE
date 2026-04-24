@@ -46,6 +46,7 @@ const mapa = L.map('mapa', {
 let latUsuario = null;
 let lngUsuario = null;
 let markerUsuario = null;
+let modoReporte = false
 
 navigator.geolocation.watchPosition(
     function(posicion) {
@@ -61,7 +62,7 @@ navigator.geolocation.watchPosition(
         }
 
         const iconoUsuario = L.divIcon({
-            html: '📍',
+            html: '<div style="width:16px;height:16px;background:red;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5)"></div>',
             className: '',
             iconSize: [30, 30],
             iconAnchor: [15, 30]
@@ -141,22 +142,25 @@ document.getElementById('toggle-zonas').addEventListener('click', () => {
 
 let circuloReporte = null;
 document.getElementById('btn-reportar').addEventListener('click',() => {
-    if (circuloReporte) {
+    if (modoReporte) {
     circuloReporte.remove();
     circuloReporte = null;
+    modoReporte = false;
+    document.getElementById('btn-reportar').textContent = 'reportar inundacion'
+} else {
+        if(latUsuario === null) return;
+        mapa.setView([latUsuario, lngUsuario], 16)
+        circuloReporte = L.circle([latUsuario, lngUsuario], {
+            radius: 200,
+            color: '#037e93',
+            fillColor: '#06b6d4',
+            fillOpacity: 0.1,
+            weight: 2
+    }).addTo(mapa)
+    modoReporte = true;
+    document.getElementById('btn-reportar').textContent = 'cancelar reporte';
 }
-    if(latUsuario === null) return;
-    
-    mapa.setView([latUsuario, lngUsuario], 16)
-    document.getElementById('btn-reportar').textContent = "cancelar reporte";
 
-    circuloReporte = L.circle([latUsuario, lngUsuario], {
-        radius: 200,
-        color: '#037e93',
-        fillColor: '#06b6d4',
-        fillOpacity: 0.1,
-        weight: 2
-}).addTo(mapa)
 });
 
 function actualizarPanel(zonas) {
