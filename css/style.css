@@ -90,6 +90,19 @@ section h3 {
     gap: 8px;
 }
 
+#btn-reportar {
+    width: 100%;
+    padding: 10px;
+    background-color:#ef4444;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor:pointer;
+}
+
 @media (max-width: 768px) {
     main {
         flex-direction: column;
