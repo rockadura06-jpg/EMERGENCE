@@ -42,18 +42,22 @@ const mapa = L.map('mapa', {
         [20.9, -103.1]
     ]
 }).setView([20.6597, -103.3496], 12);
+
+let latUsuario = null;
+let lngUsuario = null;
 let markerUsuario = null;
+
 navigator.geolocation.watchPosition(
     function(posicion) {
-        const lat = posicion.coords.latitude;
-        const lng = posicion.coords.longitude;
+        latUsuario = posicion.coords.latitude;
+        lngUsuario = posicion.coords.longitude;
 
         if(markerUsuario) {
             markerUsuario.remove();
         }
 
         if (markerUsuario === null) {
-            mapa.setView([lat, lng], 15);
+            mapa.setView([latUsuario, lngUsuario], 15);
         }
 
         const iconoUsuario = L.divIcon({
@@ -63,7 +67,7 @@ navigator.geolocation.watchPosition(
             iconAnchor: [15, 30]
         });
 
-        markerUsuario = L.marker([lat, lng], {icon:iconoUsuario})
+        markerUsuario = L.marker([latUsuario, lngUsuario], {icon:iconoUsuario})
                         .bindPopup('Tu ubicación')
                         .addTo(mapa);
     },
@@ -134,6 +138,19 @@ document.getElementById('toggle-zonas').addEventListener('click', () => {
     lista.style.display = visible ? 'none' : 'block';
     btn.textContent = visible ? 'ZONAS DE RIESGO ▼': 'ZONAS DE RIESGO ▲';
 });
+
+let circuloReporte = null;
+document.getElementById('btn-reportar').addEventListener('click',() => {
+    if(latUsuario === null) return;
+    mapa.setView([latUsuario, lngUsuario], 16)
+
+    circuloReporte = L.circle([latUsuario, lngUsuario], {
+        radius: 200,
+        color: '#037e93',
+        fillColor: '#06b6d4',
+        fillOpacity: 0.1,
+        weight: 2
+}).addTo(mapa)
 
 function actualizarPanel(zonas) {
     const contenedor = document.getElementById('lista-zonas');
