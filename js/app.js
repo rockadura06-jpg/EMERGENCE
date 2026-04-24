@@ -147,6 +147,10 @@ document.getElementById('btn-reportar').addEventListener('click',() => {
     circuloReporte = null;
     modoReporte = false;
     document.getElementById('btn-reportar').textContent = 'reportar inundacion'
+    mapa.setMaxBounds([
+        [20.4, -103.6],
+        [20.9, -103.1]
+    ]);
 } else {
         if(latUsuario === null) return;
         mapa.setView([latUsuario, lngUsuario], 16)
@@ -159,8 +163,12 @@ document.getElementById('btn-reportar').addEventListener('click',() => {
     }).addTo(mapa)
     modoReporte = true;
     document.getElementById('btn-reportar').textContent = 'cancelar reporte';
+    const delta = 0.003
+    mapa.setMaxbounds([
+        [latUsuario - delta, lngUsuario - delta],
+        [latUsuario + delta, lngUsuario + delta]
+    ]);
 }
-
 });
 
 function actualizarPanel(zonas) {
