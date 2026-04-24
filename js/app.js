@@ -141,8 +141,14 @@ document.getElementById('toggle-zonas').addEventListener('click', () => {
 
 let circuloReporte = null;
 document.getElementById('btn-reportar').addEventListener('click',() => {
+    if (circuloReporte) {
+    circuloReporte.remove();
+    circuloReporte = null;
+}
     if(latUsuario === null) return;
+    
     mapa.setView([latUsuario, lngUsuario], 16)
+    document.getElementById('btn-reportar').textContent = "cancelar reporte";
 
     circuloReporte = L.circle([latUsuario, lngUsuario], {
         radius: 200,
