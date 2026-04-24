@@ -151,6 +151,7 @@ document.getElementById('btn-reportar').addEventListener('click',() => {
         fillOpacity: 0.1,
         weight: 2
 }).addTo(mapa)
+});
 
 function actualizarPanel(zonas) {
     const contenedor = document.getElementById('lista-zonas');
