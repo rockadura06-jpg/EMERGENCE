@@ -162,6 +162,14 @@ document.getElementById('btn-reportar').addEventListener('click',() => {
             fillOpacity: 0.1,
             weight: 2
     }).addTo(mapa)
+
+    circuloReporte.on('click', function(e) {
+        const lat = e.latlng.lat.toFixed(5);
+        const lng = e.latlng.lng.toFixed(5);
+        document.getElementById('coordenadas-modal').textContent = `Coordenadas: ${lat}, ${lng}`;
+        document.getElementById('modal-reporte').style.display = 'flex';
+    });
+
     modoReporte = true;
     document.getElementById('btn-reportar').textContent = 'cancelar reporte';
     const delta = 0.003
@@ -171,6 +179,10 @@ document.getElementById('btn-reportar').addEventListener('click',() => {
         [latUsuario + delta, lngUsuario + delta]
     ]);
 }
+});
+
+document.getElementById('btn-cancelar-modal').addEventListener('click', () => {
+    document.getElementById('modal-reporte').style.display = 'none';
 });
 
 function actualizarPanel(zonas) {

@@ -151,7 +151,7 @@ section h3 {
 }
 
 #contenido-modal textarea {
-    resize: nonne;
+    resize: none;
     height: 80px;
 }
 
@@ -167,6 +167,8 @@ section h3 {
 
 #btn-cancelar-modal {
     position: absolute;
+    top: 12px;
+    right: 12px;
     padding: 10px;
     background-color: #f5f5f5;
     border: 1px solid #e0e0e0;
