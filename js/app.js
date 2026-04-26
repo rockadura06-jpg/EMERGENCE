@@ -114,7 +114,20 @@ function actualizarMapa(zonas) {
     document.getElementById('nivel-riesgo').textContent = riesgoGeneral.mensaje;
     document.getElementById('nivel-riesgo').style.color = riesgoGeneral.color;
     document.getElementById('precipitacion').textContent = `Probabilidad máxima: ${(maxProbabilidad * 100).toFixed(1)}%`;
-}     
+}
+
+function desactivarModoReporte() {
+    circuloReporte.remove();
+    circuloReporte = null;
+    modoReporte = false;
+    markerUsuario.bindPopup('Tu ubicación');
+    document.getElementById('btn-reportar').textContent = 'reportar inundacion'
+    mapa.setMinZoom(11)
+    mapa.setMaxBounds([
+        [20.4, -103.6],
+        [20.9, -103.1]
+    ]);
+}
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
@@ -143,15 +156,8 @@ document.getElementById('toggle-zonas').addEventListener('click', () => {
 let circuloReporte = null;
 document.getElementById('btn-reportar').addEventListener('click',() => {
     if (modoReporte) {
-    circuloReporte.remove();
-    circuloReporte = null;
-    modoReporte = false;
-    document.getElementById('btn-reportar').textContent = 'reportar inundacion'
-    mapa.setMinZoom(11)
-    mapa.setMaxBounds([
-        [20.4, -103.6],
-        [20.9, -103.1]
-    ]);
+        desactivarModoReporte();
+        return;
 } else {
         if(latUsuario === null) return;
         mapa.setView([latUsuario, lngUsuario], 16)
@@ -162,6 +168,7 @@ document.getElementById('btn-reportar').addEventListener('click',() => {
             fillOpacity: 0.1,
             weight: 2
     }).addTo(mapa)
+    markerUsuario.unbindPopup();
 
     circuloReporte.on('click', function(e) {
         const lat = e.latlng.lat.toFixed(5);
