@@ -44,6 +44,33 @@
             </aside>
         </main>
 
+        <div id="modal-reporte" style="display:none;">
+            <div id="contenido-modal">
+                <p id="coordenadas-modal">Coordenadas: --</p>
+
+                <label>Nombre o Alias</label>
+                <imput type="text" id="input-nombre" placeholder="Tu nombre o alias">
+
+                <label>Nivel de Agua</label>
+                <select id="input-nivel">
+                    <option value="">--Selecionar--</option>
+                    <option value="bajo">Bajo (tobillo)</option>
+                    <option value="medio">Medio (rodilla)</option>
+                    <option value="alto">Alto (cintura)</option>
+                    <option value="critico">Critico (pecho)</option>
+                </select>
+
+                <label>Descripción</label>
+                <textarea id="imput-description" placeholder="Describe la situación..."></textarea>
+
+                <label>Fotografía (opcional)</label>
+                <imput type="file" id="input-foto" accept="image/*">
+
+                <button id="btn-enviar">Enviar</button>
+                <button id="btn-cancelar-modal">Cancelar</button>
+            </div>
+        </div>
+
         <script type="module" src="js/app.js"></script>
         </body>
 </html>

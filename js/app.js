@@ -165,7 +165,7 @@ document.getElementById('btn-reportar').addEventListener('click',() => {
     modoReporte = true;
     document.getElementById('btn-reportar').textContent = 'cancelar reporte';
     const delta = 0.003
-    mapa.setMinZoom(14)
+    mapa.setMinZoom(16)
     mapa.setMaxBounds([
         [latUsuario - delta, lngUsuario - delta],
         [latUsuario + delta, lngUsuario + delta]

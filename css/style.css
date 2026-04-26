@@ -103,6 +103,78 @@ section h3 {
     cursor:pointer;
 }
 
+#modal-reporte {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#contenido-modal {
+    position: relative;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px
+}
+
+#coordenadas-modal {
+    font-size: 0.75rem;
+    color: #888;
+    text-align: center;
+}
+
+#contenido-modal label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #444;
+}
+
+#contenido-modal input,
+#contenido-modal select,
+#contenido-modal textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+#contenido-modal textarea {
+    resize: nonne;
+    height: 80px;
+}
+
+#btn-enviar {
+    padding: 10px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#btn-cancelar-modal {
+    position: absolute;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
 @media (max-width: 768px) {
     main {
         flex-direction: column;
