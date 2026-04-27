@@ -179,6 +179,14 @@ document.getElementById('btn-reportar').addEventListener('click',() => {
     }).addTo(mapa)
     markerUsuario.unbindPopup();
 
+    circuloReporte.on('mouseover', function() {
+    mapa.getContainer().style.cursor = 'crosshair';
+    });
+
+circuloReporte.on('mouseout', function() {
+    mapa.getContainer().style.cursor = '';
+    });
+
     circuloReporte.on('click', function(e) {
         const lat = e.latlng.lat.toFixed(5);
         const lng = e.latlng.lng.toFixed(5);
