@@ -77,9 +77,14 @@ navigator.geolocation.watchPosition(
             iconAnchor: [15, 15]
         });
 
-        markerUsuario = L.marker([latUsuario, lngUsuario], {icon:iconoUsuario})
-                        .bindPopup('Tu ubicación')
-                        .addTo(mapa);
+        if(modoReporte) {
+            markerUsuario = L.marker([latUsuario, lngUsuario], {icon: iconoUsuario})
+                            .addTo(mapa);
+        } else {
+            markerUsuario = L.marker([latUsuario, lngUsuario], {icon: iconoUsuario})
+                            .bindPopup('Tu ubicacion')
+                            .addTo(mapa)
+        }
     },
     function(error) {
         mapa.setView([20.6597, -103.3496], 12);
