@@ -61,6 +61,15 @@ navigator.geolocation.watchPosition(
             mapa.setView([latUsuario, lngUsuario], 15);
         }
 
+        if(modoReporte) {
+            markerUsuario = L.marker([latUsuario, lngUsuario], {icon: iconoUsuario})
+            .addTo(mapa)
+        } else {
+            markerUsuario = L.marker([latUsuario, lngUsuario], {icon: iconoUsuario})
+                            .bindPopup('Tu ubicación')
+                            .addTo(mapa);
+        }
+
         const iconoUsuario = L.divIcon({
             html: '<div style="width:16px;height:16px;background:red;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5)"></div>',
             className: '',

@@ -18,6 +18,20 @@ class ZonaRiesgo(Base):
     precipitacion = Column(Float)
     timestamp = Column(DateTime, default=datetime.utcnow)
 
+class Reporte(Base):
+    __tablename__="Reportes"
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String)
+    nivel = Column(String)
+    descripcion = Column(String)
+    foto = Column(String, nullable=True)
+    lat = Column(Float)
+    lng = Column(Float)
+    direccion = Column(String)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+
+
+
 def init_db():
     Base.metadata.create_all(bind=engine)
 

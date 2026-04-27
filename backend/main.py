@@ -1,8 +1,9 @@
-from database import init_db, SessionLocal, ZonaRiesgo, limpiar_db
+from database import init_db, SessionLocal, ZonaRiesgo, Reporte, limpiar_db
 from scheduler import scheduler, consultar_open_meteo
-from fastapi import FastAPI
+from fastapi import FastAPI, Form, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from typing import Optional
 import asyncio
 import json
 
@@ -54,3 +55,37 @@ async def sse_zonas():
             db.close()
     
     return StreamingResponse(event_stream(), media_type="text/event-stream")
+
+@app.post("/reportes")
+async def crear_reporte(
+    nombre: str = Form(...),
+    nivel: str = Form(...),
+    descripcion: str = Form(...),
+    lat: float = Form(...),
+    lng: float = Form(...),
+    direccion: str = Form(...),
+    foto: Optional[UploadFile] = File(None)
+):
+    db = SessionLocal()
+    try:
+        ruta_foto = None
+        if foto:
+            contenido = await foto.read()
+            ruta_foto = f"uploads/{foto.filename}"
+            with open(ruta_foto, "wb") as f:
+                f.write(contenido)
+
+        reporte = Reporte(
+            nombre = nombre,
+            nivel = nivel,
+            descripcion = descripcion,
+            lat = lat,
+            lng = lng,
+            direccion = direccion,
+            foto = ruta_foto
+        )
+        db.add(reporte)
+        db.commit()
+        return {"message": "Reporte guardado"}
+    finally:
+        db.close()
