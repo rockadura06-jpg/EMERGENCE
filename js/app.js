@@ -53,21 +53,10 @@ navigator.geolocation.watchPosition(
         latUsuario = posicion.coords.latitude;
         lngUsuario = posicion.coords.longitude;
 
-        if(markerUsuario) {
+        if (markerUsuario) {
             markerUsuario.remove();
-        }
-
-        if (markerUsuario === null) {
-            mapa.setView([latUsuario, lngUsuario], 15);
-        }
-
-        if(modoReporte) {
-            markerUsuario = L.marker([latUsuario, lngUsuario], {icon: iconoUsuario})
-            .addTo(mapa)
         } else {
-            markerUsuario = L.marker([latUsuario, lngUsuario], {icon: iconoUsuario})
-                            .bindPopup('Tu ubicación')
-                            .addTo(mapa);
+            mapa.setView([latUsuario, lngUsuario], 15);
         }
 
         const iconoUsuario = L.divIcon({
@@ -77,19 +66,17 @@ navigator.geolocation.watchPosition(
             iconAnchor: [15, 15]
         });
 
-        if(modoReporte) {
-            markerUsuario = L.marker([latUsuario, lngUsuario], {icon: iconoUsuario})
-                            .addTo(mapa);
+        if (modoReporte) {
+            markerUsuario = L.marker([latUsuario, lngUsuario], {icon: iconoUsuario}).addTo(mapa);
         } else {
             markerUsuario = L.marker([latUsuario, lngUsuario], {icon: iconoUsuario})
-                            .bindPopup('Tu ubicacion')
-                            .addTo(mapa)
+                            .bindPopup('Tu ubicación').addTo(mapa);
         }
     },
     function(error) {
         mapa.setView([20.6597, -103.3496], 12);
     }
-)
+);
 
 const circulos = {};
 
