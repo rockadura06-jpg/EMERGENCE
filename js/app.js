@@ -49,6 +49,7 @@ let markerUsuario = null;
 let modoReporte = false;
 let latReporte;
 let lngReporte;
+let capaReportes = L.layerGroup().addTo(mapa)
 
 navigator.geolocation.watchPosition(
     function(posicion) {
@@ -269,11 +270,11 @@ async function cargarReportes() {
         capaReportes.clearLayers();
 
         reportes.forEach (r => {
-            const maker = L.maker([r.lat, r.lng]);
-            maker.bindPopup(`
+            const marker = L.marker([r.lat, r.lng]);
+            marker.bindPopup(`
                 <b>${r.nombre}</b><br>
                 Nivel: ${r.nivel}<br>
-                ${r.descrpcion}<br>
+                ${r.descripcion}<br>
                 <small>${r.direccion || "Sin dirección"}</small>`
             );
             capaReportes.addLayer(marker);
