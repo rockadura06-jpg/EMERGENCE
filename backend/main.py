@@ -63,7 +63,7 @@ async def crear_reporte(
     descripcion: str = Form(...),
     lat: float = Form(...),
     lng: float = Form(...),
-    direccion: str = Form(...),
+    direccion: Optional[str] = Form(None),
     foto: Optional[UploadFile] = File(None)
 ):
     db = SessionLocal()
