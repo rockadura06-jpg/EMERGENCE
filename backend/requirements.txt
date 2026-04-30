@@ -3,3 +3,4 @@ uvicorn
 sqlalchemy
 apscheduler
 httpx
+python-multipart
