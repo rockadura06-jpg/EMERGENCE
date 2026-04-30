@@ -89,3 +89,25 @@ async def crear_reporte(
         return {"message": "Reporte guardado"}
     finally:
         db.close()
+
+@app.get("/reportes")
+def obtener_reportes():
+    db = SessionLocal()
+    try:
+        reportes = db.query(Reporte).all()
+        return [
+            {
+                "id": r.id,
+                "nombre": r.nombre,
+                "nivel": r.nivel,
+                "descripcion": r.descripcion,
+                "lat": r.lat,
+                "lng": r.lng,
+                "direccion": r.direccion,
+                "foto": r.foto,
+                "timestamp": str(r.timestamp)
+            }
+            for r in reportes
+        ]
+    finally:
+        db.close()
