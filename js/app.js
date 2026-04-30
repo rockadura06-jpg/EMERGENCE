@@ -261,6 +261,31 @@ function actualizarPanel(zonas) {
     });
 }
 
+async function cargarReportes() {
+    try {
+        const res = await fetch("https://emergence-backend-id2q.onrender.com/reportes")
+        const reportes = await res.json();
+
+        capaReportes.clearLayers();
+
+        reportes.forEach (r => {
+            const maker = L.maker([r.lat, r.lng]);
+            maker.bindPopup(`
+                <b>${r.nombre}</b><br>
+                Nivel: ${r.nivel}<br>
+                ${r.descrpcion}<br>
+                <small>${r.direccion || "Sin dirección"}</small>`
+            );
+            capaReportes.addLayer(marker);
+        });
+    } catch (err) {
+        console.error("Error al cargar reportes", err);
+    }
+}
+
+cargarReportes();
+setInterval(cargarReportes, 3000);
+
 conectarSSE();
 import('./firebase-init.js')
     .then(({ solicitarPermisoNotificaciones }) => {
