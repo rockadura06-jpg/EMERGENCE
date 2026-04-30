@@ -46,7 +46,9 @@ const mapa = L.map('mapa', {
 let latUsuario = null;
 let lngUsuario = null;
 let markerUsuario = null;
-let modoReporte = false
+let modoReporte = false;
+let latReporte;
+let lngReporte;
 
 navigator.geolocation.watchPosition(
     function(posicion) {
@@ -179,12 +181,12 @@ circuloReporte.on('mouseout', function() {
     mapa.getContainer().style.cursor = '';
     });
 
-    circuloReporte.on('click', function(e) {
-        const lat = e.latlng.lat.toFixed(5);
-        const lng = e.latlng.lng.toFixed(5);
-        document.getElementById('coordenadas-modal').textContent = `Coordenadas: ${lat}, ${lng}`;
-        document.getElementById('modal-reporte').style.display = 'flex';
-    });
+circuloReporte.on('click', function(e) {
+    latReporte = e.latlng.lat.toFixed(5);
+    lngReporte = e.latlng.lng.toFixed(5);
+    document.getElementById('coordenadas-modal').textContent = `Coordenadas: ${latReporte}, ${lngReporte}`;
+    document.getElementById('modal-reporte').style.display = 'flex';
+});
 
     modoReporte = true;
     document.getElementById('btn-reportar').textContent = 'cancelar reporte';
@@ -196,6 +198,39 @@ circuloReporte.on('mouseout', function() {
     ]);
 }
 });
+
+document.getElementById('btn-enviar').addEventListener('click', async () => {
+    const formData = new FormData();
+    formData.append('nombre', document.getElementById('input-nombre').value);
+    formData.append('nivel', document.getElementById('input-nivel').value);
+    formData.append('descripcion', document.getElementById('input-descripcion').value);
+    formData.append('lat', latReporte);
+    formData.append('lng', lngReporte);
+    formData.append('direccion', '');
+
+    const fotoInput = document.getElementById('input-foto');
+    if (fotoInput.files[0]) {
+        formData.append('foto', fotoInput.files[0]);
+    }
+
+    try {
+        const response = await fetch('https://emergence-backend-id2q.onrender.com/reportes', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            document.getElementById('modal-reporte').style.display = 'none';
+            desactivarModoReporte();
+            alert('Reporte enviado correctamente');
+        } else {
+            alert('Error al enviar el reporte');
+        }
+    } catch {
+        console.error('Error: ', error);
+        alert('Error al conectar con el servidor');
+    }
+})
 
 document.getElementById('btn-cancelar-modal').addEventListener('click', () => {
     document.getElementById('modal-reporte').style.display = 'none';
