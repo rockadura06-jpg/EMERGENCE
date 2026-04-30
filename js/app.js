@@ -203,7 +203,7 @@ document.getElementById('btn-enviar').addEventListener('click', async () => {
     const formData = new FormData();
     formData.append('nombre', document.getElementById('input-nombre').value);
     formData.append('nivel', document.getElementById('input-nivel').value);
-    formData.append('descripcion', document.getElementById('input-descripcion').value);
+    formData.append('descripcion', document.getElementById('input-description').value);
     formData.append('lat', latReporte);
     formData.append('lng', lngReporte);
     formData.append('direccion', '');
