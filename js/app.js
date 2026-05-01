@@ -210,7 +210,6 @@ document.getElementById('btn-enviar').addEventListener('click', async () => {
         if (response.ok) {
             document.getElementById('modal-reporte').style.display = 'none';
             desactivarModoReporte();
-            alert('Reporte enviado correctamente');
         } else {
             alert('Error al enviar el reporte');
         }
@@ -269,8 +268,15 @@ async function cargarReportes() {
 
         capaReportes.clearLayers();
 
+        const iconoReporte = L.divIcon({
+            html: '<div style="width:16px;height:16px;background:blue;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5)"></div>',
+            className: '',
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
+        });
+
         reportes.forEach (r => {
-            const marker = L.marker([r.lat, r.lng]);
+            const marker = L.marker([r.lat, r.lng], {icon: iconoReporte});
             marker.bindPopup(`
                 <b>${r.nombre}</b><br>
                 Nivel: ${r.nivel}<br>
