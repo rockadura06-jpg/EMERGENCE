@@ -144,6 +144,14 @@ document.getElementById('toggle-zonas').addEventListener('click', () => {
     btn.textContent = visible ? 'ZONAS DE RIESGO ▼': 'ZONAS DE RIESGO ▲';
 });
 
+document.getElementById('toggle-simbologia').addEventListener('click', () => {
+    const lista = document.getElementById('lista-simbologia');
+    const btn = document.getElementById('toggle-simbologia');
+    const visible = lista.style.display !== 'none';
+    lista.style.display = visible ? 'none' : 'block';
+    btn.textContent = visible ? 'SIMBOLOGÍA ▼': 'SIMBOLOGÍA ▲';
+});
+
 let circuloReporte = null;
 document.getElementById('btn-reportar').addEventListener('click',() => {
     if (modoReporte) {
@@ -269,7 +277,7 @@ async function cargarReportes() {
         capaReportes.clearLayers();
 
         const iconoReporte = L.divIcon({
-            html: '<div style="width:16px;height:16px;background:blue;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5)"></div>',
+            html: '<div style="width:16px;height:16px;background: #13a8f8;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5)"></div>',
             className: '',
             iconSize: [24, 24],
             iconAnchor: [12, 12]
