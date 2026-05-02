@@ -241,6 +241,16 @@ section h3 {
     flex-shrink: 0;
 }
 
+.punto-circulo {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border-radius: 50%;
+    border: 2px solid #aaa;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+}
+
 .simbolo-titulo {
     font-weight: 600;
     font-size: 0.85rem;
