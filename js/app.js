@@ -279,8 +279,8 @@ async function cargarReportes() {
         const iconoReporte = L.divIcon({
             html: '<div style="width:16px;height:16px;background: #13a8f8;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5)"></div>',
             className: '',
-            iconSize: [24, 24],
-            iconAnchor: [12, 12]
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
         });
 
         reportes.forEach (r => {

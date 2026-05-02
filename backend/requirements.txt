@@ -4,3 +4,4 @@ sqlalchemy
 apscheduler
 httpx
 python-multipart
+cloudinary

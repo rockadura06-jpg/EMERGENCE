@@ -6,6 +6,15 @@ from fastapi.responses import StreamingResponse
 from typing import Optional
 import asyncio
 import json
+import cloudinary
+import cloudinary.uploader
+import os
+
+cloudinary.config(
+    cloud_name = os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key = os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret = os.environ.get("CLOUDINARY_API_SECRET")
+)
 
 app = FastAPI(title="EMERGENCE Backend")
 
@@ -71,9 +80,11 @@ async def crear_reporte(
         ruta_foto = None
         if foto:
             contenido = await foto.read()
-            ruta_foto = f"uploads/{foto.filename}"
-            with open(ruta_foto, "wb") as f:
-                f.write(contenido)
+            resultado = cloudinary.uploader.upload(
+                contenido,
+                folder="emergence"
+            )
+            ruta_foto = resultado["secure_url"]
 
         reporte = Reporte(
             nombre = nombre,
