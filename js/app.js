@@ -290,8 +290,8 @@ async function cargarReportes() {
                 Nivel: ${r.nivel}<br>
                 ${r.descripcion}<br>
                 <small>${r.direccion || "Sin dirección"}</small>
-                ${r.foto ? `<img src="${r.foto}" style="width:100%;margin-top:6px;border-radius:6px;">` : ''}
-                `, {maxWidth: 250 });
+                ${r.foto ? `<img src="${r.foto}" style="width:100%;min-width:300px;margin-top:6px;border-radius:6px;">` : ''}
+                `, {maxWidth: 350 });
             capaReportes.addLayer(marker);
         });
     } catch (err) {
@@ -300,7 +300,7 @@ async function cargarReportes() {
 }
 
 cargarReportes();
-setInterval(cargarReportes, 3000);
+setInterval(cargarReportes, 30000);
 
 conectarSSE();
 import('./firebase-init.js')
