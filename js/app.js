@@ -300,8 +300,8 @@ async function cargarReportes() {
                 Nivel: ${r.nivel}<br>
                 ${r.descripcion}<br>
                 <small>${r.direccion || "Sin dirección"}</small>
-                ${r.foto ? `<img src="${r.foto}" style="width:100%;min-width:250px;margin-top:6px;border-radius:6px;">` : ''}
-                `, {maxWidth: 250 });
+                ${r.foto ? `<img src="${r.foto}" style="width:100%;min-width:150px;margin-top:6px;border-radius:6px;">` : ''}
+                `, {maxWidth: 150 });
             capaReportes.addLayer(marker);
         });
     } catch (err) {
