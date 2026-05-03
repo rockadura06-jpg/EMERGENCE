@@ -161,28 +161,38 @@ document.getElementById('btn-reportar').addEventListener('click',() => {
         if(latUsuario === null) return;
         mapa.setView([latUsuario, lngUsuario], 16)
         circuloReporte = L.circle([latUsuario, lngUsuario], {
-            radius: 200,
-            color: '#037e93',
-            fillColor: '#06b6d4',
-            fillOpacity: 0.1,
-            weight: 2
-    }).addTo(mapa)
+        radius: 200,
+        color: '#037e93',
+        fillColor: '#06b6d4',
+        fillOpacity: 0.1,
+        weight: 2
+    }).addTo(mapa);
     markerUsuario.unbindPopup();
 
     circuloReporte.on('mouseover', function() {
-    mapa.getContainer().style.cursor = 'crosshair';
+        mapa.getContainer().style.cursor = 'crosshair';
     });
 
-circuloReporte.on('mouseout', function() {
-    mapa.getContainer().style.cursor = '';
+    circuloReporte.on('mouseout', function() {
+        mapa.getContainer().style.cursor = '';
     });
 
-circuloReporte.on('click', function(e) {
-    latReporte = e.latlng.lat.toFixed(5);
-    lngReporte = e.latlng.lng.toFixed(5);
-    document.getElementById('coordenadas-modal').textContent = `Coordenadas: ${latReporte}, ${lngReporte}`;
-    document.getElementById('modal-reporte').style.display = 'flex';
-});
+    circuloReporte.on('click', function(e) {
+        latReporte = e.latlng.lat.toFixed(5);
+        lngReporte = e.latlng.lng.toFixed(5);
+        document.getElementById('coordenadas-modal').textContent = `Coordenadas: ${latReporte}, ${lngReporte}`;
+
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latReporte}&lon=${lngReporte}&format=json`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('direccion-modal').textContent = data.display_name || "Sin dirección";
+            })
+            .catch(() => {
+                document.getElementById('direccion-modal').textContent = "No se pudo obtener la dirección";
+            });
+
+        document.getElementById('modal-reporte').style.display = 'flex';
+    });
 
     modoReporte = true;
     document.getElementById('btn-reportar').textContent = 'cancelar reporte';
@@ -202,7 +212,7 @@ document.getElementById('btn-enviar').addEventListener('click', async () => {
     formData.append('descripcion', document.getElementById('input-description').value);
     formData.append('lat', latReporte);
     formData.append('lng', lngReporte);
-    formData.append('direccion', '');
+    formData.append('direccion', document.getElementById('direccion-modal').textContent);
 
     const fotoInput = document.getElementById('input-foto');
     if (fotoInput.files[0]) {
@@ -290,8 +300,8 @@ async function cargarReportes() {
                 Nivel: ${r.nivel}<br>
                 ${r.descripcion}<br>
                 <small>${r.direccion || "Sin dirección"}</small>
-                ${r.foto ? `<img src="${r.foto}" style="width:100%;min-width:300px;margin-top:6px;border-radius:6px;">` : ''}
-                `, {maxWidth: 350 });
+                ${r.foto ? `<img src="${r.foto}" style="width:100%;min-width:250px;margin-top:6px;border-radius:6px;">` : ''}
+                `, {maxWidth: 250 });
             capaReportes.addLayer(marker);
         });
     } catch (err) {
