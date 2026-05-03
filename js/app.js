@@ -4,6 +4,12 @@ if ('serviceWorker' in navigator) {
     .catch((error) => console.log('Error al registrar SW: ', error));
 }
 
+let userId = localStorage.getItem('userId');
+if (!userId) {
+    userId = crypto.randomUUID();
+    localStorage.setItem('userId', userId);
+}
+
 const ZONAS = [
     { nombre: 'Av. Inglaterra y Niños Héroes',          lat:20.6665 , lon:-103.3787 , radio: 300, alturaMax:6.00 },
     { nombre: 'La Martinica, Zapopan',                  lat:20.7452 , lon:-103.3667 , radio: 300, alturaMax:5.00  },
@@ -241,6 +247,24 @@ document.getElementById('btn-cancelar-modal').addEventListener('click', () => {
     document.getElementById('modal-reporte').style.display = 'none';
 });
 
+async function votar(reporteId, tipo) {
+    const formData = new FormData();
+    formData.append('user_id', userId);
+    formData.append('tipo', tipo);
+
+    try {
+        const res = await fetch(`https://emergence-backend-id2q.onrender.com/reportes/${reporteId}/votar`, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+        console.log(data.message);
+        cargarReportes();
+    } catch (err) {
+        console.error('Error al votar', err);
+    }
+}
+
 function desactivarModoReporte() {
     circuloReporte.remove();
     circuloReporte = null;
@@ -301,6 +325,13 @@ async function cargarReportes() {
                 ${r.descripcion}<br>
                 <small>${r.direccion || "Sin dirección"}</small>
                 ${r.foto ? `<img src="${r.foto}" style="width:100%;min-width:150px;margin-top:6px;border-radius:6px;">` : ''}
+                <br>
+                <button onclick="votar(${r.id}, 'like')" style="background:transparent;border:2px solid #22c55e;color:#22c55e;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:0.85rem;">
+                👍 (${r.likes})
+                </button>
+                <button onclick="votar(${r.id}, 'dislike')" style="background:transparent;border:2px solid #ef4444;color:#ef4444;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:0.85rem;">
+                👎 (${r.dislikes})
+                </button>
                 `, {maxWidth: 150 });
             capaReportes.addLayer(marker);
         });
