@@ -29,8 +29,15 @@ class Reporte(Base):
     lng = Column(Float)
     direccion = Column(String)
     timestamp = Column(DateTime, default=datetime.utcnow)
+    likes = Column(Integer, default=0)
+    dislikes = Column(Integer, default=0)
 
-
+class Voto(Base):
+    __tablename__ = "votos"
+    id = Column(Integer, primary_key=True, index=True)
+    reporte_id = Column(Integer)
+    user_id = Column(String)
+    tipo = Column(String)
 
 def init_db():
     Base.metadata.create_all(bind=engine)

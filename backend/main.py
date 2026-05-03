@@ -1,4 +1,4 @@
-from database import init_db, SessionLocal, ZonaRiesgo, Reporte, limpiar_db
+from database import init_db, SessionLocal, ZonaRiesgo, Reporte, Voto, limpiar_db
 from scheduler import scheduler, consultar_open_meteo
 from fastapi import FastAPI, Form, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -116,9 +116,41 @@ def obtener_reportes():
                 "lng": r.lng,
                 "direccion": r.direccion,
                 "foto": r.foto,
-                "timestamp": str(r.timestamp)
+                "timestamp": str(r.timestamp),
+                "likes": r.likes,
+                "dislikes": r.dislikes
             }
             for r in reportes
         ]
+    finally:
+        db.close()
+
+@app.post("/reportes/{reporte_id}/votar")
+async def votar_reporte(
+    reporte_id: int,
+    user_id: str = Form(...),
+    tipo: str = Form(...)
+):
+    db = SessionLocal()
+    try:
+        voto_existente = db.query(Voto).filter(
+            Voto.reporte_id == reporte_id,
+            Voto.user_id == user_id
+        ).first()
+
+        if voto_existente:
+            return{"message": "Ya votaste en ete reporte"}
+        
+        nuevo_voto = Voto(reporte_id=reporte_id, user_id=user_id, tipo=tipo)
+        db.add(nuevo_voto)
+
+        reporte = db.query(Reporte).filter(Reporte.id == reporte_id).first()
+        if tipo == "like":
+            reporte.likes += 1
+        elif tipo == "dislike":
+            reporte.dislikes+= 1
+
+        db.commit()
+        return {"message": "Voto registrado"}
     finally:
         db.close()
