@@ -258,8 +258,27 @@ async function votar(reporteId, tipo) {
             body: formData
         });
         const data = await res.json();
-        console.log(data.message);
-        cargarReportes();
+        
+        document.getElementById(`likes-${reporteId}`).textContent = `👍 (${data.likes})`;
+        document.getElementById(`dislikes-${reporteId}`).textContent = `👎 (${data.dislikes})`;
+
+        const btnLike = document.getElementById(`btn-like-${reporteId}`);
+        const btnDislike = document.getElementById(`btn-dislike-${reporteId}`);
+
+        if (data.message === 'Voto anulado') {
+            btnLike.style.background = 'transparent';
+            btnDislike.style.background = 'transparent';
+        } else if (tipo === 'like') {
+            btnLike.style.background = '#22c55e';
+            btnLike.style.color = 'white';
+            btnDislike.style.background = 'transparent';
+            btnDislike.style.color = '#ef4444';
+        } else {
+            btnDislike.style.background = '#ef4444';
+            btnDislike.style.color = 'white';
+            btnLike.style.background = 'transparent';
+            btnLike.style.color = '#22c55e';
+        }
     } catch (err) {
         console.error('Error al votar', err);
     }
@@ -327,11 +346,11 @@ async function cargarReportes() {
                 <small>${r.direccion || "Sin dirección"}</small>
                 ${r.foto ? `<img src="${r.foto}" style="width:100%;min-width:150px;margin-top:6px;border-radius:6px;">` : ''}
                 <br>
-                <button onclick="votar(${r.id}, 'like')" style="background:transparent;border:2px solid #22c55e;color:#22c55e;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:0.85rem;">
-                👍 (${r.likes})
+                <button id="btn-like-${r.id}" onclick="votar(${r.id}, 'like')" style="...">
+                    <span id="likes-${r.id}">👍 (${r.likes})</span>
                 </button>
-                <button onclick="votar(${r.id}, 'dislike')" style="background:transparent;border:2px solid #ef4444;color:#ef4444;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:0.85rem;">
-                👎 (${r.dislikes})
+                <button id="btn-dislike-${r.id}" onclick="votar(${r.id}, 'dislike')" style="...">
+                    <span id="dislikes-${r.id}">👎 (${r.dislikes})</span>
                 </button>
                 `, {maxWidth: 150 });
             capaReportes.addLayer(marker);
