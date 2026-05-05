@@ -166,6 +166,6 @@ async def votar_reporte(
             else:
                 reporte.dislikes += 1
             db.commit()
-            return {"message": "Voto registrado", "likes": reporte.likes, "dislikes": reporte.dsilikes}
+            return {"message": "Voto registrado", "likes": reporte.likes, "dislikes": reporte.dislikes}
     finally:
         db.close()
