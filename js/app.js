@@ -264,6 +264,7 @@ async function votar(reporteId, tipo) {
         console.error('Error al votar', err);
     }
 }
+window.votar = votar;
 
 function desactivarModoReporte() {
     circuloReporte.remove();
