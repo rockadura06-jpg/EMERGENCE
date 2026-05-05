@@ -133,24 +133,39 @@ async def votar_reporte(
 ):
     db = SessionLocal()
     try:
+        reporte = db.query(Reporte).filter(Reporte.id == reporte_id).first()
         voto_existente = db.query(Voto).filter(
             Voto.reporte_id == reporte_id,
             Voto.user_id == user_id
         ).first()
 
         if voto_existente:
-            return{"message": "Ya votaste en ete reporte"}
-        
-        nuevo_voto = Voto(reporte_id=reporte_id, user_id=user_id, tipo=tipo)
-        db.add(nuevo_voto)
-
-        reporte = db.query(Reporte).filter(Reporte.id == reporte_id).first()
-        if tipo == "like":
-            reporte.likes += 1
-        elif tipo == "dislike":
-            reporte.dislikes+= 1
-
-        db.commit()
-        return {"message": "Voto registrado"}
+            if voto_existente.tipo == tipo:
+                if tipo == "like":
+                    reporte.likes -= 1
+                else:
+                    reporte.dislikes -= 1
+                db.delete(voto_existente)
+                db.commit()
+                return {"message": "Voto anulado", "likes": reporte.likes, "dislikes": reporte.dislikes}
+            else:
+                if voto_existente.tipo == "like":
+                    reporte.likes -= 1
+                    reporte.dislikes += 1
+                else:
+                    reporte.dislikes -= 1
+                    reporte.likes += 1
+                voto_existente.tipo = tipo
+                db.commit()
+                return {"message": "Voto cambiado", "likes": reporte.likes, "dislikes": reporte.dislikes}
+        else:
+            nuevo_voto = Voto(reporte_id=reporte_id, user_id=user_id, tipo=tipo)
+            db.add(nuevo_voto)
+            if tipo == "like":
+                reporte.likes += 1
+            else:
+                reporte.dislikes += 1
+            db.commit()
+            return {"message": "Voto registrado", "likes": reporte.likes, "dislikes": reporte.dsilikes}
     finally:
         db.close()
