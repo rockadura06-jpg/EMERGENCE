@@ -366,7 +366,7 @@ async function cargarReportes() {
                     document.getElementById(`btn-like-${r.id}`).style.background = '#22c55e';
                     document.getElementById(`btn-like-${r.id}`).style.color = 'white';
                 } else if (votoGuardado == 'dislike') {
-                    document.getElementById(`btn-dislike-${r.id}`).style.background = 'ef4444';
+                    document.getElementById(`btn-dislike-${r.id}`).style.background = '#ef4444';
                     document.getElementById(`btn-dislike-${r.id}`).style.color = 'white';
                 }
             })
