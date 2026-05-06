@@ -346,10 +346,10 @@ async function cargarReportes() {
                 <small>${r.direccion || "Sin dirección"}</small>
                 ${r.foto ? `<img src="${r.foto}" style="width:100%;min-width:150px;margin-top:6px;border-radius:6px;">` : ''}
                 <br>
-                <button id="btn-like-${r.id}" onclick="votar(${r.id}, 'like')" style="...">
+                <button id="btn-like-${r.id}" onclick="votar(${r.id}, 'like')" style="background:transparent;border:2px solid #22c55e;color:#22c55e;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:0.85rem;">
                     <span id="likes-${r.id}">👍 (${r.likes})</span>
                 </button>
-                <button id="btn-dislike-${r.id}" onclick="votar(${r.id}, 'dislike')" style="...">
+                <button id="btn-dislike-${r.id}" onclick="votar(${r.id}, 'dislike')" style="background:transparent;border:2px solid #ef4444;color:#ef4444;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:0.85rem;">
                     <span id="dislikes-${r.id}">👎 (${r.dislikes})</span>
                 </button>
                 `, {maxWidth: 150 });
