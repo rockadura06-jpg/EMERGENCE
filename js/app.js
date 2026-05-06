@@ -266,14 +266,19 @@ async function votar(reporteId, tipo) {
         const btnDislike = document.getElementById(`btn-dislike-${reporteId}`);
 
         if (data.message === 'Voto anulado') {
+            localStorage.removeItem(`voto-${reporteId}`);
             btnLike.style.background = 'transparent';
+            btnLike.style.color = '#22c55e';
             btnDislike.style.background = 'transparent';
+            btnDislike.style.color = '#ef4444';
         } else if (tipo === 'like') {
+            localStorage.setItem(`voto-${reporteId}`, 'like');
             btnLike.style.background = '#22c55e';
             btnLike.style.color = 'white';
             btnDislike.style.background = 'transparent';
             btnDislike.style.color = '#ef4444';
         } else {
+            localStorage.setItem(`voto-${reporteId}`, 'dislike');
             btnDislike.style.background = '#ef4444';
             btnDislike.style.color = 'white';
             btnLike.style.background = 'transparent';
@@ -354,6 +359,17 @@ async function cargarReportes() {
                 </button>
                 `, {maxWidth: 150 });
             capaReportes.addLayer(marker);
+
+            marker.on('popupopen', () => {
+                const votoGuardado = localStorage.getItem(`voto-${r.id}`);
+                if (votoGuardado == 'like') {
+                    document.getElementById(`btn-like-${r.id}`).style.background = '#22c55e';
+                    document.getElementById(`btn-like-${r.id}`).style.color = 'white';
+                } else if (votoGuardado == 'dislike') {
+                    document.getElementById(`btn-dislike-${r.id}`).style.background = 'ef4444';
+                    document.getElementById(`btn-dislike-${r.id}`).style.color = 'white';
+                }
+            })
         });
     } catch (err) {
         console.error("Error al cargar reportes", err);
