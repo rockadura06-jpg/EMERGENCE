@@ -11,9 +11,9 @@ import cloudinary.uploader
 import os
 
 cloudinary.config(
-    cloud_name = os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key = os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret = os.environ.get("CLOUDINARY_API_SECRET")
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET")
 )
 
 app = FastAPI(title="EMERGENCE Backend")
@@ -25,27 +25,36 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 def root():
     return {"message": "EMERGENCE corriendo"}
 
+
 @app.on_event("startup")
 async def startup():
     init_db()
-    limpiar_db()
-    scheduler.start()
+    if not scheduler.running:
+        scheduler.start()
+
     await consultar_open_meteo()
+
 
 @app.on_event("shutdown")
 async def shutdown():
-    scheduler.shutdown()
+    if scheduler.running:
+        scheduler.shutdown()
+
 
 @app.get("/sse/zonas")
 async def sse_zonas():
+
     async def event_stream():
-        db = SessionLocal()
-        try:
-            while True:
+
+        while True:
+            db = SessionLocal()
+
+            try:
                 zonas = db.query(ZonaRiesgo).order_by(
                     ZonaRiesgo.timestamp.desc()
                 ).limit(12).all()
@@ -58,12 +67,19 @@ async def sse_zonas():
                     }
                     for z in zonas
                 ]
+
                 yield f"data: {json.dumps(data)}\n\n"
-                await asyncio.sleep(60)
-        finally:
-            db.close()
-    
-    return StreamingResponse(event_stream(), media_type="text/event-stream")
+
+            finally:
+                db.close()
+
+            await asyncio.sleep(60)
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream"
+    )
+
 
 @app.post("/reportes")
 async def crear_reporte(
@@ -76,36 +92,46 @@ async def crear_reporte(
     foto: Optional[UploadFile] = File(None)
 ):
     db = SessionLocal()
+
     try:
         ruta_foto = None
+
         if foto:
             contenido = await foto.read()
+
             resultado = cloudinary.uploader.upload(
                 contenido,
                 folder="emergence"
             )
+
             ruta_foto = resultado["secure_url"]
 
         reporte = Reporte(
-            nombre = nombre,
-            nivel = nivel,
-            descripcion = descripcion,
-            lat = lat,
-            lng = lng,
-            direccion = direccion,
-            foto = ruta_foto
+            nombre=nombre,
+            nivel=nivel,
+            descripcion=descripcion,
+            lat=lat,
+            lng=lng,
+            direccion=direccion,
+            foto=ruta_foto
         )
+
         db.add(reporte)
         db.commit()
+
         return {"message": "Reporte guardado"}
+
     finally:
         db.close()
+
 
 @app.get("/reportes")
 def obtener_reportes():
     db = SessionLocal()
+
     try:
         reportes = db.query(Reporte).all()
+
         return [
             {
                 "id": r.id,
@@ -122,8 +148,10 @@ def obtener_reportes():
             }
             for r in reportes
         ]
+
     finally:
         db.close()
+
 
 @app.post("/reportes/{reporte_id}/votar")
 async def votar_reporte(
@@ -132,40 +160,79 @@ async def votar_reporte(
     tipo: str = Form(...)
 ):
     db = SessionLocal()
+
     try:
-        reporte = db.query(Reporte).filter(Reporte.id == reporte_id).first()
+        reporte = db.query(Reporte).filter(
+            Reporte.id == reporte_id
+        ).first()
+
+        if not reporte:
+            return {"error": "Reporte no encontrado"}
+
         voto_existente = db.query(Voto).filter(
             Voto.reporte_id == reporte_id,
             Voto.user_id == user_id
         ).first()
 
         if voto_existente:
+
             if voto_existente.tipo == tipo:
+
                 if tipo == "like":
                     reporte.likes -= 1
                 else:
                     reporte.dislikes -= 1
+
                 db.delete(voto_existente)
                 db.commit()
-                return {"message": "Voto anulado", "likes": reporte.likes, "dislikes": reporte.dislikes}
+
+                return {
+                    "message": "Voto anulado",
+                    "likes": reporte.likes,
+                    "dislikes": reporte.dislikes
+                }
+
             else:
+
                 if voto_existente.tipo == "like":
                     reporte.likes -= 1
                     reporte.dislikes += 1
                 else:
                     reporte.dislikes -= 1
                     reporte.likes += 1
+
                 voto_existente.tipo = tipo
+
                 db.commit()
-                return {"message": "Voto cambiado", "likes": reporte.likes, "dislikes": reporte.dislikes}
+
+                return {
+                    "message": "Voto cambiado",
+                    "likes": reporte.likes,
+                    "dislikes": reporte.dislikes
+                }
+
         else:
-            nuevo_voto = Voto(reporte_id=reporte_id, user_id=user_id, tipo=tipo)
+
+            nuevo_voto = Voto(
+                reporte_id=reporte_id,
+                user_id=user_id,
+                tipo=tipo
+            )
+
             db.add(nuevo_voto)
+
             if tipo == "like":
                 reporte.likes += 1
             else:
                 reporte.dislikes += 1
+
             db.commit()
-            return {"message": "Voto registrado", "likes": reporte.likes, "dislikes": reporte.dislikes}
+
+            return {
+                "message": "Voto registrado",
+                "likes": reporte.likes,
+                "dislikes": reporte.dislikes
+            }
+
     finally:
         db.close()
