@@ -130,6 +130,20 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(mapa);
 
+async function cargarZonasIniciales() {
+    try {
+        // Intenta obtener los datos actuales por una ruta normal
+        const res = await fetch('https://emergence-backend-id2q.onrender.com/zonas'); 
+        const zonas = await res.json();
+        if(zonas.length > 0) {
+            actualizarMapa(zonas);
+            actualizarPanel(zonas);
+        }
+    } catch (err) {
+        console.error("Error en carga inicial:", err);
+    }
+}
+
 function conectarSSE() {
     const sse = new EventSource('https://emergence-backend-id2q.onrender.com/sse/zonas');
     sse.onmessage = (event) => {
@@ -379,6 +393,7 @@ async function cargarReportes() {
 cargarReportes();
 setInterval(cargarReportes, 30000);
 
+cargarZonasIniciales();
 conectarSSE();
 import('./firebase-init.js')
     .then(({ solicitarPermisoNotificaciones }) => {
@@ -387,5 +402,3 @@ import('./firebase-init.js')
         });
     })
     .catch(e => console.warn('Firebase no disponible:', e));
-
-    //reporpeorpeorpeorpeorpeorprpe
