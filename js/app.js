@@ -94,10 +94,11 @@ function actualizarMapa(zonas) {
 
     zonas.forEach(zona => {
         const zonaFrontend = ZONAS.find(z => z.nombre === zona.nombre);
-        if (!zonaFrontend) 
+        if (!zonaFrontend) {
             // temporal //
             console.warn(`Nos e encontró coincidencia para: "${zona.nombre}"`);
             return;
+        }
         const probabilidad = calcularProbabilidad(zona.precipitacion, zonaFrontend.alturaMax);
         const riesgo = clasificarRiesgoPorProbabilidad(probabilidad);
 
