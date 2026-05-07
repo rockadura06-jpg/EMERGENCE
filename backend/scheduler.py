@@ -30,20 +30,26 @@ async def consultar_open_meteo():
                 )
                 response = await client.get(url)
                 data = response.json()
-                precipitacion = data["hourly"]["precipitation"][0]
+                
+                hora_actual = datetime.utcnow().hour
+                precipitacion = data["hourly"]["precipitation"][hora_actual]
                 nivel = "sin_calcular"
 
                 registro = ZonaRiesgo(
-                    nombre = zona["nombre"],
-                    nivel_riesgo = nivel,
-                    precipitacion = precipitacion,
-                    timestamp = datetime.utcnow()
+                    nombre=zona["nombre"],
+                    nivel_riesgo=nivel,
+                    precipitacion=precipitacion,
+                    timestamp=datetime.utcnow()
                 )
                 db.add(registro)
+                print(f"  ✓ {zona['nombre']}: {precipitacion}mm")  # ← log por zona
+            
             db.commit()
-            print(f"Zonas actualizadas: {datetime.utcnow()}")
+            print(f"✅ Zonas actualizadas: {datetime.utcnow()} — {len(ZONAS)} zonas guardadas")
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"❌ Error en consultar_open_meteo: {e}")
+        import traceback
+        traceback.print_exc()  # ← stack trace completo
     finally:
         db.close()
 

@@ -32,7 +32,6 @@ def root():
 @app.on_event("startup")
 async def startup():
     init_db()
-    limpiar_db()
     scheduler.start()
     await consultar_open_meteo()
 
@@ -44,19 +43,25 @@ async def shutdown():
 def obtener_zonas():
     db = SessionLocal()
     try:
-        zonas = db.query(ZonaRiesgo).order_by(
-            ZonaRiesgo.timestamp.desc()
-        ).limit(12).all()
+        from sqlalchemy import func
+        subq = db.query(
+            ZonaRiesgo.nombre,
+            func.max(ZonaRiesgo.timestamp).label("max_ts")
+        ).group_by(ZonaRiesgo.nombre).subquery()
+
+        zonas = db.query(ZonaRiesgo).join(
+            subq,
+            (ZonaRiesgo.nombre == subq.c.nombre) &
+            (ZonaRiesgo.timestamp == subq.c.max_ts)
+        ).all()
 
         return [
             {
-                {
-                    "nombre": z.nombre,
-                    "nivel_riesgo": z.nivel_riesgo,
-                    "precipitacion": z.precipitacion
-                }
-                for z in zonas
+                "nombre": z.nombre,
+                "nivel_riesgo": z.nivel_riesgo,
+                "precipitacion": z.precipitacion
             }
+            for z in zonas
         ]
     finally:
         db.close()
@@ -64,12 +69,20 @@ def obtener_zonas():
 @app.get("/sse/zonas")
 async def sse_zonas():
     async def event_stream():
-        db = SessionLocal()
-        try:
-            while True:
-                zonas = db.query(ZonaRiesgo).order_by(
-                    ZonaRiesgo.timestamp.desc()
-                ).limit(12).all()
+        while True:
+            db = SessionLocal()
+            try:
+                from sqlalchemy import func
+                subq = db.query(
+                    ZonaRiesgo.nombre,
+                    func.max(ZonaRiesgo.timestamp).label("max_ts")
+                ).group_by(ZonaRiesgo.nombre).subquery()
+
+                zonas = db.query(ZonaRiesgo).join(
+                    subq,
+                    (ZonaRiesgo.nombre == subq.c.nombre) &
+                    (ZonaRiesgo.timestamp == subq.c.max_ts)
+                ).all()
 
                 data = [
                     {
@@ -80,10 +93,10 @@ async def sse_zonas():
                     for z in zonas
                 ]
                 yield f"data: {json.dumps(data)}\n\n"
-                await asyncio.sleep(60)
-        finally:
-            db.close()
-    
+            finally:
+                db.close()
+            await asyncio.sleep(60)
+
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
 @app.post("/reportes")
