@@ -40,6 +40,27 @@ async def startup():
 async def shutdown():
     scheduler.shutdown()
 
+@app.get("/zonas")
+def obtener_zonas():
+    db = SessionLocal()
+    try:
+        zonas = db.query(ZonaRiesgo).order_by(
+            ZonaRiesgo.timestamp.desc()
+        ).limit(12).all()
+
+        return [
+            {
+                {
+                    "nombre": z.nombre,
+                    "nivel_riesgo": z.nivel_riesgo,
+                    "precipitacion": z.precipitacion
+                }
+                for z in zonas
+            }
+        ]
+    finally:
+        db.close()
+
 @app.get("/sse/zonas")
 async def sse_zonas():
     async def event_stream():

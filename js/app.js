@@ -136,7 +136,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 async function cargarZonasIniciales() {
     try {
-        const res = await fetch('https://emergence-backend-id2q.onrender.com/sse/zonas'); 
+        const res = await fetch('https://emergence-backend-id2q.onrender.com/zonas'); 
         const zonas = await res.json();
         if(zonas.length > 0) {
             actualizarMapa(zonas);
