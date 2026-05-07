@@ -30,6 +30,13 @@ async def consultar_open_meteo():
                 )
                 response = await client.get(url)
                 data = response.json()
+
+                #Mensaje temporal
+                print(f" Response {zona['nombre']}: {data}")
+
+                if "hourly" not in data:
+                    print(f"  ⚠️ Sin datos hourly para {zona['nombre']}: {data}")
+                    continue  # ← salta esta zona y sigue con las demás
                 
                 hora_actual = datetime.utcnow().hour
                 precipitacion = data["hourly"]["precipitation"][hora_actual]
