@@ -94,7 +94,10 @@ function actualizarMapa(zonas) {
 
     zonas.forEach(zona => {
         const zonaFrontend = ZONAS.find(z => z.nombre === zona.nombre);
-        if (!zonaFrontend) return;
+        if (!zonaFrontend) 
+            // temporal //
+            console.warn(`Nos e encontró coincidencia para: "${zona.nombre}"`);
+            return;
         const probabilidad = calcularProbabilidad(zona.precipitacion, zonaFrontend.alturaMax);
         const riesgo = clasificarRiesgoPorProbabilidad(probabilidad);
 
@@ -132,7 +135,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 async function cargarZonasIniciales() {
     try {
-        // Intenta obtener los datos actuales por una ruta normal
         const res = await fetch('https://emergence-backend-id2q.onrender.com/sse/zonas'); 
         const zonas = await res.json();
         if(zonas.length > 0) {
