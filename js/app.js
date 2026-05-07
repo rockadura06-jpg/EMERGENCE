@@ -387,3 +387,5 @@ import('./firebase-init.js')
         });
     })
     .catch(e => console.warn('Firebase no disponible:', e));
+
+    //reporpeorpeorpeorpeorpeorprpe
