@@ -32,6 +32,7 @@ def root():
 @app.on_event("startup")
 async def startup():
     init_db()
+    limpiar_db()
     scheduler.start()
     await consultar_open_meteo()
 
