@@ -22,41 +22,50 @@ async def consultar_open_meteo():
     db = SessionLocal()
     try:
         async with httpx.AsyncClient() as client:
-            for zona in ZONAS:
-                url = (
-                    f"https://api.open-meteo.com/v1/forecast"
-                    f"?latitude={zona['lat']}&longitude={zona['lon']}"
-                    f"&hourly=precipitation&forecast_days=1"
-                )
-                response = await client.get(url)
-                data = response.json()
-
-                #Mensaje temporal
-                print(f" Response {zona['nombre']}: {data}")
-
-                if "hourly" not in data:
-                    print(f"  ⚠️ Sin datos hourly para {zona['nombre']}: {data}")
-                    continue  # ← salta esta zona y sigue con las demás
+            # Una sola llamada con todas las coordenadas
+            lats = ",".join(str(z["lat"]) for z in ZONAS)
+            lons = ",".join(str(z["lon"]) for z in ZONAS)
+            
+            url = (
+                f"https://api.open-meteo.com/v1/forecast"
+                f"?latitude={lats}&longitude={lons}"
+                f"&hourly=precipitation&forecast_days=1"
+            )
+            
+            response = await client.get(url)
+            resultados = response.json()  # devuelve una lista
+            
+            # Si solo hay una zona devuelve dict, normalizamos a lista
+            if isinstance(resultados, dict):
+                resultados = [resultados]
+            
+            hora_actual = datetime.utcnow().hour
+            
+            for i, zona in enumerate(ZONAS):
+                data = resultados[i]
                 
-                hora_actual = datetime.utcnow().hour
+                if "hourly" not in data:
+                    print(f"  ⚠️ Sin datos para {zona['nombre']}: {data}")
+                    continue
+                
                 precipitacion = data["hourly"]["precipitation"][hora_actual]
-                nivel = "sin_calcular"
-
+                
                 registro = ZonaRiesgo(
                     nombre=zona["nombre"],
-                    nivel_riesgo=nivel,
+                    nivel_riesgo="sin_calcular",
                     precipitacion=precipitacion,
                     timestamp=datetime.utcnow()
                 )
                 db.add(registro)
-                print(f"  ✓ {zona['nombre']}: {precipitacion}mm")  # ← log por zona
+                print(f"  ✓ {zona['nombre']}: {precipitacion}mm")
             
             db.commit()
-            print(f"✅ Zonas actualizadas: {datetime.utcnow()} — {len(ZONAS)} zonas guardadas")
+            print(f"✅ Zonas actualizadas: {datetime.utcnow()} — 1 request para {len(ZONAS)} zonas")
+    
     except Exception as e:
-        print(f"❌ Error en consultar_open_meteo: {e}")
+        print(f"❌ Error: {e}")
         import traceback
-        traceback.print_exc()  # ← stack trace completo
+        traceback.print_exc()
     finally:
         db.close()
 
