@@ -26,7 +26,7 @@ const ZONAS = [
 ];
 
 function calcularProbabilidad(precipitacion, alturaMax) {
-    const probabilidad = Math.min(1, (precipitacion / 25) * (alturaMax - 0.50) / (6.00 - 0.50));
+    const probabilidad = Math.min(1, (precipitacion / 40) * (alturaMax - 0.50) / (6.00 - 0.50));
     return probabilidad;
 }
 
