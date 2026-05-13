@@ -26,7 +26,7 @@ const ZONAS = [
 ];
 
 function calcularProbabilidad(precipitacion, alturaMax) {
-    const probabilidad = Math.min(1, (precipitacion / 40) * (alturaMax - 0.50) / (6.00 - 0.50));
+    const probabilidad = Math.min(1, (precipitacion / 40) * (alturaMax - 0.10) / (6.00 - 0.10));
     return probabilidad;
 }
 
@@ -421,6 +421,7 @@ mapa.on('zoomstart', () => {
 function testPrecipitacion() {
     const precip = parseFloat(document.getElementById('debug-precip').value);
     actualizarMapa(ZONAS.map(z => ({ nombre: z.nombre, precipitacion: precip })));
+    actualizarPanel(ZONAS.map(z => ({ nombre: z.nombre, precipitacion: precip })))
 }
 window.testPrecipitacion = testPrecipitacion;
 // Debug temporal: ELIMINAR
