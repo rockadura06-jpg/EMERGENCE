@@ -261,6 +261,8 @@ async function votar(reporteId, tipo) {
         
         document.getElementById(`likes-${reporteId}`).textContent = `👍 (${data.likes})`;
         document.getElementById(`dislikes-${reporteId}`).textContent = `👎 (${data.dislikes})`;
+        localStorage.setItem(`likes-${reporteId}`, data.likes);
+        localStorage.setItem(`dislikes-${reporteId}`, data.dislikes);
 
         const btnLike = document.getElementById(`btn-like-${reporteId}`);
         const btnDislike = document.getElementById(`btn-dislike-${reporteId}`);
@@ -369,6 +371,11 @@ async function cargarReportes() {
                     document.getElementById(`btn-dislike-${r.id}`).style.background = '#ef4444';
                     document.getElementById(`btn-dislike-${r.id}`).style.color = 'white';
                 }
+                const likesGuardados = localStorage.getItem(`likes-${r.id}`);
+                const dislikesGuardados = localStorage.getItem(`dislikes-${r.id}`);
+
+                if (likesGuardados) document.getElementById(`likes-${r.id}`).textContent = `👍 (${likesGuardados})`;
+                if (dislikesGuardados) document.getElementById(`dislikes-${r.id}`).textContent = `👎 (${dislikesGuardados})`;
             })
         });
     } catch (err) {
