@@ -422,4 +422,5 @@ function testPrecipitacion() {
     const precip = parseFloat(document.getElementById('debug-precip').value);
     actualizarMapa(ZONAS.map(z => ({ nombre: z.nombre, precipitacion: precip })));
 }
+window.testPrecipitacion = testPrecipitacion;
 // Debug temporal: ELIMINAR
