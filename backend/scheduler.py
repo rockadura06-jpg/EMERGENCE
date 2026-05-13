@@ -22,7 +22,6 @@ async def consultar_open_meteo():
     db = SessionLocal()
     try:
         async with httpx.AsyncClient() as client:
-            # Una sola llamada con todas las coordenadas
             lats = ",".join(str(z["lat"]) for z in ZONAS)
             lons = ",".join(str(z["lon"]) for z in ZONAS)
             
@@ -33,9 +32,8 @@ async def consultar_open_meteo():
             )
             
             response = await client.get(url)
-            resultados = response.json()  # devuelve una lista
+            resultados = response.json()
             
-            # Si solo hay una zona devuelve dict, normalizamos a lista
             if isinstance(resultados, dict):
                 resultados = [resultados]
             
@@ -45,7 +43,7 @@ async def consultar_open_meteo():
                 data = resultados[i]
                 
                 if "hourly" not in data:
-                    print(f"  ⚠️ Sin datos para {zona['nombre']}: {data}")
+                    print(f"Sin datos para {zona['nombre']}: {data}")
                     continue
                 
                 precipitacion = data["hourly"]["precipitation"][hora_actual]
@@ -60,10 +58,10 @@ async def consultar_open_meteo():
                 print(f"  ✓ {zona['nombre']}: {precipitacion}mm")
             
             db.commit()
-            print(f"✅ Zonas actualizadas: {datetime.utcnow()} — 1 request para {len(ZONAS)} zonas")
+            print(f"Zonas actualizadas: {datetime.utcnow()} — 1 request para {len(ZONAS)} zonas")
     
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
         import traceback
         traceback.print_exc()
     finally:

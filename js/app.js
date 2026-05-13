@@ -95,7 +95,6 @@ function actualizarMapa(zonas) {
     zonas.forEach(zona => {
         const zonaFrontend = ZONAS.find(z => z.nombre === zona.nombre);
         if (!zonaFrontend) {
-            // temporal //
             console.warn(`Nos e encontró coincidencia para: "${zona.nombre}"`);
             return;
         }
@@ -159,22 +158,6 @@ function conectarSSE() {
     sse.onerror = () => console.error('Error de conexión SSE');
 }
 
-document.getElementById('toggle-zonas').addEventListener('click', () => {
-    const lista = document.getElementById('lista-zonas');
-    const btn = document.getElementById('toggle-zonas');
-    const visible = lista.style.display !== 'none';
-    lista.style.display = visible ? 'none' : 'block';
-    btn.textContent = visible ? 'ZONAS DE RIESGO ▼': 'ZONAS DE RIESGO ▲';
-});
-
-document.getElementById('toggle-simbologia').addEventListener('click', () => {
-    const lista = document.getElementById('lista-simbologia');
-    const btn = document.getElementById('toggle-simbologia');
-    const visible = lista.style.display !== 'none';
-    lista.style.display = visible ? 'none' : 'block';
-    btn.textContent = visible ? 'SIMBOLOGÍA ▼': 'SIMBOLOGÍA ▲';
-});
-
 let circuloReporte = null;
 document.getElementById('btn-reportar').addEventListener('click',() => {
     if (modoReporte) {
@@ -232,7 +215,7 @@ document.getElementById('btn-enviar').addEventListener('click', async () => {
     const formData = new FormData();
     formData.append('nombre', document.getElementById('input-nombre').value);
     formData.append('nivel', document.getElementById('input-nivel').value);
-    formData.append('descripcion', document.getElementById('input-description').value);
+    formData.append('descripcion', document.getElementById('input-descripcion').value);
     formData.append('lat', latReporte);
     formData.append('lng', lngReporte);
     formData.append('direccion', document.getElementById('direccion-modal').textContent);
@@ -405,3 +388,23 @@ import('./firebase-init.js')
         });
     })
     .catch(e => console.warn('Firebase no disponible:', e));
+
+document.getElementById('toggle-zonas').addEventListener('click', () => {
+    const lista = document.getElementById('lista-zonas');
+    const btn = document.getElementById('toggle-zonas');
+    const visible = lista.style.display !== 'none';
+    lista.style.display = visible ? 'none' : 'block';
+    btn.textContent = visible ? 'ZONAS DE RIESGO ▼': 'ZONAS DE RIESGO ▲';
+});
+
+document.getElementById('toggle-simbologia').addEventListener('click', () => {
+    const lista = document.getElementById('lista-simbologia');
+    const btn = document.getElementById('toggle-simbologia');
+    const visible = lista.style.display !== 'none';
+    lista.style.display = visible ? 'none' : 'block';
+    btn.textContent = visible ? 'SIMBOLOGÍA ▼': 'SIMBOLOGÍA ▲';
+});
+
+mapa.on('zoomstart', () => {
+    mapa.closePopup();
+});
