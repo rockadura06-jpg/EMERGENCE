@@ -32,13 +32,13 @@ function calcularProbabilidad(precipitacion, alturaMax) {
 
 function clasificarRiesgoPorProbabilidad(probabilidad) {
     if (probabilidad >= 0.7)
-        return { nivel: 'alto',   color: '#ef4444', mensaje: 'Riesgo alto de inundación' };
+        return { nivel: 'alto',   color: '#ef4444', mensaje: 'Riesgo alto de inundación', radio: 600 };
     if (probabilidad >= 0.5)
-        return { nivel: 'medio',  color: '#f97316', mensaje: 'Riesgo medio de inundación' };
+        return { nivel: 'medio',  color: '#f97316', mensaje: 'Riesgo medio de inundación', radio: 500 };
     if (probabilidad >= 0.1)
-        return { nivel: 'bajo',   color: '#eab308', mensaje: 'Riesgo bajo de inundación' };
+        return { nivel: 'bajo',   color: '#eab308', mensaje: 'Riesgo bajo de inundación', radio: 400 };
     
-    return { nivel: 'ninguno', color: '#22c55e', mensaje: 'Sin riesgo de inundación' };
+    return { nivel: 'ninguno', color: '#22c55e', mensaje: 'Sin riesgo de inundación', radio: 300 };
 }
 
 const mapa = L.map('mapa', {
@@ -95,7 +95,7 @@ function actualizarMapa(zonas) {
     zonas.forEach(zona => {
         const zonaFrontend = ZONAS.find(z => z.nombre === zona.nombre);
         if (!zonaFrontend) {
-            console.warn(`Nos e encontró coincidencia para: "${zona.nombre}"`);
+            console.warn(`No se encontró coincidencia para: "${zona.nombre}"`);
             return;
         }
         const probabilidad = calcularProbabilidad(zona.precipitacion, zonaFrontend.alturaMax);
@@ -103,12 +103,13 @@ function actualizarMapa(zonas) {
 
         if(circulos[zona.nombre]) {
             circulos[zona.nombre].setStyle({color: riesgo.color, fillColor: riesgo.color});
+            circulos[zona.nombre].setRadius(riesgo.radio);
             circulos[zona.nombre].setPopupContent(
                 `<b>${zona.nombre}</b><br>${riesgo.mensaje}<br>Lluvia: ${zona.precipitacion} mm`
             );
         } else {
             circulos[zona.nombre] = L.circle([zonaFrontend.lat, zonaFrontend.lon], {
-                radius: zonaFrontend.radio,
+                radius: riesgo.radio,
                 color: riesgo.color,
                 fillColor: riesgo.color,
                 fillOpacity: 0.4,

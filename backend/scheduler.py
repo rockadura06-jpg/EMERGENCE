@@ -68,4 +68,4 @@ async def consultar_open_meteo():
         db.close()
 
 scheduler = AsyncIOScheduler()
-scheduler.add_job(consultar_open_meteo, "interval", minutes=30)
+scheduler.add_job(consultar_open_meteo, "interval", minutes=10)
