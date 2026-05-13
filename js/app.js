@@ -416,3 +416,10 @@ document.getElementById('toggle-simbologia').addEventListener('click', () => {
 mapa.on('zoomstart', () => {
     mapa.closePopup();
 });
+
+// Debug temporal: ELIMINAR
+function testPrecipitacion() {
+    const precip = parseFloat(document.getElementById('debug-precip').value);
+    actualizarMapa(ZONAS.map(z => ({ nombre: z.nombre, precipitacion: precip })));
+}
+// Debug temporal: ELIMINAR
