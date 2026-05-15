@@ -56,6 +56,7 @@ let modoReporte = false;
 let latReporte;
 let lngReporte;
 let capaReportes = L.layerGroup().addTo(mapa)
+let zonaCercana = null;
 
 navigator.geolocation.watchPosition(
     function(posicion) {
@@ -347,7 +348,6 @@ function calcularDistancia(lat1, lng1, lat2, lng2) {
 
 function zonaMasCercana() {
     let menorDistancia = Infinity;
-    let zonaCercana = null;
     ZONAS.forEach(zona => {
         const distancia = calcularDistancia(latUsuario, lngUsuario, zona.lat, zona.lon);
         if (distancia < menorDistancia) {
@@ -361,19 +361,19 @@ function zonaMasCercana() {
 function actualizarPanelCercana() {
     if (latUsuario === null || zonasActuales.length === 0) return;
 
-    const zona = zonaMasCercana();
-    const distancia = calcularDistancia(latUsuario, lngUsuario, zona.lat, zona.lon);
-    const zonaBackend = zonasActuales.find(z => z.nombre === zona.nombre);
+    zonaCercana = zonaMasCercana();
+    const distancia = calcularDistancia(latUsuario, lngUsuario, zonaCercana.lat, zonaCercana.lon);
+    const zonaBackend = zonasActuales.find(z => z.nombre === zonaCercana.nombre);
     
     if (!zonaBackend) return;
 
-    const probabilidad = calcularProbabilidad(zonaBackend.precipitacion, zona.alturaMax);
+    const probabilidad = calcularProbabilidad(zonaBackend.precipitacion, zonaCercana.alturaMax);
     const riesgo = clasificarRiesgoPorProbabilidad(probabilidad);
 
-    document.getElementById('cercana-nombre').textContent = zona.nombre;
+    document.getElementById('cercana-nombre').textContent = zonaCercana.nombre;
     document.getElementById('cercana-riesgo').textContent = riesgo.mensaje.toUpperCase();
     document.getElementById('cercana-riesgo').style.color = riesgo.color;
-    document.getElementById('cercana-distancia').textContent = `${Math.round(distancia)} m`;
+    document.getElementById('cercana-distancia').textContent = `${(distancia / 1000).toFixed(1)} km`;
     document.getElementById('panel-cercana').style.display = 'block';
 }
 
@@ -457,6 +457,10 @@ document.getElementById('toggle-simbologia').addEventListener('click', () => {
     const visible = lista.style.display !== 'none';
     lista.style.display = visible ? 'none' : 'block';
     btn.textContent = visible ? 'SIMBOLOGÍA ▼': 'SIMBOLOGÍA ▲';
+});
+
+document.getElementById('panel-cercana').addEventListener('click', () => {
+    if (zonaCercana) mapa.setView([zonaCercana.lat, zonaCercana.lon], 15);
 });
 
 mapa.on('zoomstart', () => {
