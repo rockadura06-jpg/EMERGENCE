@@ -67,6 +67,7 @@ navigator.geolocation.watchPosition(
         } else {
             mapa.setView([latUsuario, lngUsuario], 15);
         }
+        actualizarPanelCercana();
 
         const iconoUsuario = L.divIcon({
             html: '<div style="width:16px;height:16px;background:red;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5)"></div>',
@@ -88,8 +89,9 @@ navigator.geolocation.watchPosition(
 );
 
 const circulos = {};
-
+let zonasActuales = []
 function actualizarMapa(zonas) {
+    zonasActuales = zonas;
     const horaActual = new Date().getHours();
 
     zonas.forEach(zona => {
@@ -118,6 +120,7 @@ function actualizarMapa(zonas) {
             .bindPopup(`<b>${zona.nombre}</b><br>${riesgo.mensaje}<br>Lluvia: ${zona.precipitacion} mm`)
             .addTo(mapa);
         }
+        actualizarPanelCercana();
     });
 
     const maxProbabilidad = Math.max(...zonas.map(z => {
@@ -329,6 +332,49 @@ function actualizarPanel(zonas) {
         });
         contenedor.appendChild(tarjeta);
     });
+}
+
+function calcularDistancia(lat1, lng1, lat2, lng2) {
+    const R = 6371000; // radio de la Tierra en metros
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c; // distancia en metros
+}
+
+function zonaMasCercana() {
+    let menorDistancia = Infinity;
+    let zonaCercana = null;
+    ZONAS.forEach(zona => {
+        const distancia = calcularDistancia(latUsuario, lngUsuario, zona.lat, zona.lon);
+        if (distancia < menorDistancia) {
+               menorDistancia = distancia;
+               zonaCercana = zona;
+        }
+    });
+    return zonaCercana;
+}
+
+function actualizarPanelCercana() {
+    if (latUsuario === null || zonasActuales.length === 0) return;
+
+    const zona = zonaMasCercana();
+    const distancia = calcularDistancia(latUsuario, lngUsuario, zona.lat, zona.lon);
+    const zonaBackend = zonasActuales.find(z => z.nombre === zona.nombre);
+    
+    if (!zonaBackend) return;
+
+    const probabilidad = calcularProbabilidad(zonaBackend.precipitacion, zona.alturaMax);
+    const riesgo = clasificarRiesgoPorProbabilidad(probabilidad);
+
+    document.getElementById('cercana-nombre').textContent = zona.nombre;
+    document.getElementById('cercana-riesgo').textContent = riesgo.mensaje.toUpperCase();
+    document.getElementById('cercana-riesgo').style.color = riesgo.color;
+    document.getElementById('cercana-distancia').textContent = `${Math.round(distancia)} m`;
+    document.getElementById('panel-cercana').style.display = 'block';
 }
 
 async function cargarReportes() {
