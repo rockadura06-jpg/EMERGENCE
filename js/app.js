@@ -139,9 +139,9 @@ function actualizarMapa(zonas) {
     return zf ? calcularProbabilidad(z.precipitacion, zf.alturaMax) : 0;
     }));
     const riesgoGeneral = clasificarRiesgoPorProbabilidad(maxProbabilidad);
-    document.getElementById('nivel-riesgo').textContent = riesgoGeneral.mensaje;
-    document.getElementById('nivel-riesgo').style.color = riesgoGeneral.color;
-    document.getElementById('precipitacion').textContent = `Probabilidad máxima: ${(maxProbabilidad * 100).toFixed(1)}%`;
+    //document.getElementById('nivel-riesgo').textContent = riesgoGeneral.mensaje;
+    //document.getElementById('nivel-riesgo').style.color = riesgoGeneral.color;
+    //document.getElementById('precipitacion').textContent = `Probabilidad máxima: ${(maxProbabilidad * 100).toFixed(1)}%`;
 }
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -337,7 +337,7 @@ function actualizarPanel(zonas) {
         tarjeta.innerHTML = `
             <h4>${zona.nombre}</h4>
             <span class="etiqueta-riesgo" style="color:${riesgo.color}">${riesgo.mensaje.toUpperCase()}</span>
-            <p>${(probabilidad * 100).toFixed(1)}% de probabilidad</p>
+            <p>${clima.icono} ${clima.etiqueta} · ${(probabilidad * 100).toFixed(1)}% de probabilidad</p>
         `;
         tarjeta.addEventListener('click', () => {
             mapa.setView([zonaFrontend.lat, zonaFrontend.lon], 15);
@@ -382,6 +382,9 @@ function actualizarPanelCercana() {
     const riesgo = clasificarRiesgoPorProbabilidad(probabilidad);
     const clima = interpretarWeatherCode(zonaBackend.weather_code)
 
+    document.getElementById('nivel-riesgo').textContent = `${clima.icono} ${clima.etiqueta}`;
+    document.getElementById('nivel-riesgo').style.color = riesgo.color;
+    document.getElementById('precipitacion').textContent = `${riesgo.mensaje} · ${(probabilidad * 100).toFixed(1)}% de probabilidad`
     document.getElementById('cercana-nombre').textContent = zonaCercana.nombre;
     document.getElementById('cercana-riesgo').textContent = riesgo.mensaje.toUpperCase();
     document.getElementById('cercana-riesgo').style.color = riesgo.color;
