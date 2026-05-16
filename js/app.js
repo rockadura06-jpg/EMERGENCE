@@ -30,6 +30,16 @@ function calcularProbabilidad(precipitacion, alturaMax) {
     return probabilidad;
 }
 
+function interpretarWeatherCode(code) {
+    if (code === 0)     return { icono: '☀️', etiqueta: 'Despejado' };
+    if (code <= 3)      return { icono: '⛅', etiqueta: 'Parcialmente nublado' };
+    if (code <= 48)     return { icono: '☁️', etiqueta: 'Nublado' };
+    if (code <= 67)     return { icono: '🌧️', etiqueta: 'Lluvia' };
+    if (code <= 77)     return { icono: '🌨️', etiqueta: 'Nieve' };
+    if (code <= 82)     return { icono: '🌦️', etiqueta: 'Chubascos' };
+    return                     { icono: '⛈️', etiqueta: 'Tormenta' };
+}
+
 function clasificarRiesgoPorProbabilidad(probabilidad) {
     if (probabilidad >= 0.7)
         return { nivel: 'alto',   color: '#ef4444', mensaje: 'Riesgo alto de inundación', radio: 600 };
@@ -320,6 +330,7 @@ function actualizarPanel(zonas) {
 
         const probabilidad = calcularProbabilidad(zona.precipitacion, zonaFrontend.alturaMax);
         const riesgo = clasificarRiesgoPorProbabilidad(probabilidad);
+        const clima = interpretarWeatherCode(zona.weather_code);
 
         const tarjeta = document.createElement('div');
         tarjeta.className = `tarjeta-zona riesgo-${riesgo.nivel}`;
@@ -369,11 +380,13 @@ function actualizarPanelCercana() {
 
     const probabilidad = calcularProbabilidad(zonaBackend.precipitacion, zonaCercana.alturaMax);
     const riesgo = clasificarRiesgoPorProbabilidad(probabilidad);
+    const clima = interpretarWeatherCode(zonaBackend.weather_code)
 
     document.getElementById('cercana-nombre').textContent = zonaCercana.nombre;
     document.getElementById('cercana-riesgo').textContent = riesgo.mensaje.toUpperCase();
     document.getElementById('cercana-riesgo').style.color = riesgo.color;
     document.getElementById('cercana-distancia').textContent = `${(distancia / 1000).toFixed(1)} km`;
+    document.getElementById('cercana-clima').textContent = `${clima.icono} ${clima.etiqueta}`;
     document.getElementById('panel-cercana').style.display = 'block';
 }
 

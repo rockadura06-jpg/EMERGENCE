@@ -89,7 +89,8 @@ async def sse_zonas():
                     {
                         "nombre": z.nombre,
                         "nivel_riesgo": z.nivel_riesgo,
-                        "precipitacion": z.precipitacion
+                        "precipitacion": z.precipitacion,
+                        "weather_code": z.weather_code
                     }
                     for z in zonas
                 ]

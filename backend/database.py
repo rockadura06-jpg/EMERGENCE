@@ -16,6 +16,7 @@ class ZonaRiesgo(Base):
     nombre = Column(String)
     nivel_riesgo = Column(String)
     precipitacion = Column(Float)
+    weather_code = Column(Integer, nullable=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
 
 class Reporte(Base):

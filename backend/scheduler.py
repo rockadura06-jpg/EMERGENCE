@@ -28,7 +28,7 @@ async def consultar_open_meteo():
             url = (
                 f"https://api.open-meteo.com/v1/forecast"
                 f"?latitude={lats}&longitude={lons}"
-                f"&hourly=precipitation&forecast_days=1"
+                f"&hourly=precipitation,weather_code&forecast_days=1"
             )
             
             response = await client.get(url)
@@ -47,11 +47,13 @@ async def consultar_open_meteo():
                     continue
                 
                 precipitacion = data["hourly"]["precipitation"][hora_actual]
-                
+                weather_code = data["hourly"]["weather_code"][hora_actual]
+
                 registro = ZonaRiesgo(
                     nombre=zona["nombre"],
                     nivel_riesgo="sin_calcular",
                     precipitacion=precipitacion,
+                    weather_code=weather_code,
                     timestamp=datetime.utcnow()
                 )
                 db.add(registro)
