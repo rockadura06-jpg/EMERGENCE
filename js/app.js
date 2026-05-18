@@ -491,3 +491,70 @@ function testPrecipitacion() {
 }
 window.testPrecipitacion = testPrecipitacion;
 // Debug temporal: ELIMINAR
+
+// ── Configuración ──
+const CONFIG_KEY = 'emergence_config';
+
+function cargarConfig() {
+    const guardado = localStorage.getItem(CONFIG_KEY);
+    return guardado ? JSON.parse(guardado) : { nickname: '', darkMode: false, notificaciones: true };
+}
+
+function guardarConfig(config) {
+    localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+}
+
+function aplicarDarkMode(activo) {
+    document.body.classList.toggle('dark', activo);
+}
+
+// Inicializar con valores guardados
+const config = cargarConfig();
+
+const inputNickname = document.getElementById('input-nickname');
+const toggleDark = document.getElementById('toggle-dark');
+const toggleNotif = document.getElementById('toggle-notif');
+
+inputNickname.value = config.nickname;
+toggleDark.checked = config.darkMode;
+toggleNotif.checked = config.notificaciones;
+aplicarDarkMode(config.darkMode);
+
+// Prellenar nickname en modal de reporte si existe
+if (config.nickname) {
+    document.getElementById('input-nombre').value = config.nickname;
+}
+
+// Eventos
+inputNickname.addEventListener('input', () => {
+    config.nickname = inputNickname.value;
+    guardarConfig(config);
+    // Sincronizar con el campo nombre del modal
+    document.getElementById('input-nombre').value = config.nickname;
+});
+
+toggleDark.addEventListener('change', () => {
+    config.darkMode = toggleDark.checked;
+    guardarConfig(config);
+    aplicarDarkMode(config.darkMode);
+});
+
+toggleNotif.addEventListener('change', () => {
+    config.notificaciones = toggleNotif.checked;
+    guardarConfig(config);
+    // Si activan notificaciones, solicitar permiso de nuevo
+    if (config.notificaciones) {
+        import('./firebase-init.js')
+            .then(({ solicitarPermisoNotificaciones }) => solicitarPermisoNotificaciones())
+            .catch(e => console.warn('Firebase no disponible:', e));
+    }
+});
+
+// Abrir/cerrar panel
+document.getElementById('btn-config').addEventListener('click', () => {
+    document.getElementById('panel-config').classList.toggle('abierto');
+});
+
+document.getElementById('btn-cerrar-config').addEventListener('click', () => {
+    document.getElementById('panel-config').classList.remove('abierto');
+});

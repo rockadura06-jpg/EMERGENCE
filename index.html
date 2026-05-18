@@ -18,6 +18,7 @@
             </div>
             <div id="estado-live">
                 <span id="indicador">● online</span>
+                <button id="btn-config" title="Configuración">⚙️</button>
             </div>
         </header>
 
@@ -131,6 +132,34 @@
 
                 <button id="btn-enviar">Enviar</button>
                 
+            </div>
+        </div>
+
+        <div id="panel-config">
+            <div id="panel-config-header">
+                <span>Configuración</span>
+                <button id="btn-cerrar-config">✕</button>
+            </div>
+
+            <div class="config-item">
+                <label for="input-nickname">Nickname</label>
+                <input type="text" id="input-nickname" placeholder="Tu nombre en reportes">
+            </div>
+
+            <div class="config-item">
+                <label for="toggle-dark">Modo oscuro</label>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-dark">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="config-item">
+                <label for="toggle-notif">Notificaciones</label>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-notif">
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
 

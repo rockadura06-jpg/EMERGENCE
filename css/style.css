@@ -1,3 +1,145 @@
+/* ── Variables de tema ── */
+:root {
+    --bg-main: #ffffff;
+    --bg-header: #1a1a2e;
+    --bg-panel: #ffffff;
+    --bg-tarjeta: #f9f9f9;
+    --text-primary: #1a1a1a;
+    --text-secondary: #555555;
+    --border-color: #e0e0e0;
+    --shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+body.dark {
+    --bg-main: #0f0f1a;
+    --bg-header: #0a0a14;
+    --bg-panel: #1a1a2e;
+    --bg-tarjeta: #222235;
+    --text-primary: #e8e8f0;
+    --text-secondary: #9090aa;
+    --border-color: #2e2e4a;
+    --shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+/* ── Botón ⚙️ ── */
+#btn-config {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    margin-left: 8px;
+}
+
+#btn-config:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+/* ── Panel de configuración ── */
+#panel-config {
+    position: fixed;
+    top: 60px; /* justo debajo del header */
+    right: -280px;
+    width: 260px;
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px 0 0 12px;
+    box-shadow: var(--shadow);
+    z-index: 2000;
+    padding: 16px;
+    transition: right 0.3s ease;
+}
+
+#panel-config.abierto {
+    right: 0;
+}
+
+#panel-config-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+#btn-cerrar-config {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.config-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.88rem;
+}
+
+.config-item:last-child {
+    border-bottom: none;
+}
+
+.config-item input[type="text"] {
+    width: 140px;
+    padding: 6px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-tarjeta);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+}
+
+/* ── Toggle switch ── */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #ccc;
+    border-radius: 24px;
+    transition: 0.3s;
+}
+
+.slider::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.switch input:checked + .slider {
+    background: #06b6d4;
+}
+
+.switch input:checked + .slider::before {
+    transform: translateX(20px);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,11 +148,12 @@
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #f5f5f5;
-    color: #1a1a1a;
+    background: var(--bg-main);
+    color: var(--text-primary);
     height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: background 0.3s, color 0.3s;
 }
 
 header {
@@ -18,8 +161,8 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 12px 20px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border-color);
 }
 
 #logo h1 {
@@ -51,8 +194,9 @@ main {
 
 #panel-datos {
     width: 320px;
-    background-color: #ffffff;
-    border-left: 1px solid #e0e0e0;
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    border-left: 1px solid var(--border-color);
     overflow-y: auto;
     padding: 20px;
 }
@@ -200,12 +344,13 @@ section h3 {
 }
 
 .tarjeta-zona {
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
+    background: var(--bg-tarjeta);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 10px 14px;
     margin-bottom: 8px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .tarjeta-zona h4 {
