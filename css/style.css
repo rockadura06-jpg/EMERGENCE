@@ -451,3 +451,19 @@ body.dark #panel-cercana p {
 body.dark #panel-cercana h4 {
     color: #ffffff;
 }
+body.dark #contenido-modal {
+    background: #1a1a2e;
+    color: #ffffff;
+}
+
+body.dark #contenido-modal input,
+body.dark #contenido-modal select,
+body.dark #contenido-modal textarea {
+    background: #222235;
+    color: #ffffff;
+    border-color: #2e2e4a;
+}
+
+body.dark #btn-cancelar-modal {
+    color: #ccccdd;
+}
