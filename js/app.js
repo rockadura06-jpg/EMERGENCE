@@ -144,9 +144,18 @@ function actualizarMapa(zonas) {
     //document.getElementById('precipitacion').textContent = `Probabilidad máxima: ${(maxProbabilidad * 100).toFixed(1)}%`;
 }
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-}).addTo(mapa);
+let tileLayer = null;
+
+function aplicarTilesPorTema(darkMode) {
+    if (tileLayer) tileLayer.remove();
+    const url = darkMode
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const attribution = darkMode
+        ? '© OpenStreetMap © CARTO'
+        : '© OpenStreetMap contributors';
+    tileLayer = L.tileLayer(url, { attribution, subdomains: 'abcd', maxZoom: 19 }).addTo(mapa);
+}
 
 async function cargarZonasIniciales() {
     try {
@@ -537,6 +546,7 @@ toggleDark.addEventListener('change', () => {
     config.darkMode = toggleDark.checked;
     guardarConfig(config);
     aplicarDarkMode(config.darkMode);
+    aplicarTilesPorTema(config.darkMode)
 });
 
 toggleNotif.addEventListener('change', () => {

@@ -21,10 +21,6 @@ body.dark {
     --shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 
-body.dark #mapa {
-    filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9);
-}
-
 /* ── Botón ⚙️ ── */
 #btn-config {
     background: transparent;
@@ -439,7 +435,6 @@ body.dark .simbolo-titulo {
 }
 
 body.dark #panel-cercana {
-    filter: invert(1) hue-rotate(180deg) brightness(1.15) contrast(1.1);
     background: #1a1a2e;
     color: #ffffff;
 }
@@ -466,8 +461,4 @@ body.dark #contenido-modal textarea {
 
 body.dark #btn-cancelar-modal {
     color: #ccccdd;
-}
-
-body.dark #mapa img {
-    filter: invert(1) hue-rotate(180deg);
 }
