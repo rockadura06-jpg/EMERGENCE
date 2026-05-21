@@ -439,6 +439,7 @@ body.dark .simbolo-titulo {
 }
 
 body.dark #panel-cercana {
+    filter: invert(1) hue-rotate(180deg) brightness(1.15) contrast(1.1);
     background: #1a1a2e;
     color: #ffffff;
 }
