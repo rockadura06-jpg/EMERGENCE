@@ -148,13 +148,19 @@ let tileLayer = null;
 
 function aplicarTilesPorTema(darkMode) {
     if (tileLayer) tileLayer.remove();
-    const url = darkMode
-        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    const attribution = darkMode
-        ? '© OpenStreetMap © CARTO'
-        : '© OpenStreetMap contributors';
-    tileLayer = L.tileLayer(url, { attribution, subdomains: 'abcd', maxZoom: 19 }).addTo(mapa);
+    if (darkMode) {
+        tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap © CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(mapa);
+    } else {
+        tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            subdomains: 'abc',
+            maxZoom: 19
+        }).addTo(mapa);
+    }
     mapa.invalidateSize();
 }
 
