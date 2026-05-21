@@ -426,13 +426,25 @@ body.dark .simbolo-titulo {
     color: #ffffff;
 }
 
+#panel-cercana {
+    position: absolute;
+    bottom: 30px;
+    right: 10px;
+    z-index: 999;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    min-width: 180px;
+}
+
 body.dark #panel-cercana {
     background: #1a1a2e;
     color: #ffffff;
 }
 
 body.dark #panel-cercana p {
-    color: #ccccdd !important;
+    color: #ffffff !important;
 }
 
 body.dark #panel-cercana h4 {
