@@ -434,3 +434,16 @@ body.dark #panel-cercana {
 body.dark #panel-cercana p {
     color: #ccccdd;
 }
+
+body.dark #panel-cercana {
+    background: #1a1a2e;
+    color: #ffffff;
+}
+
+body.dark #panel-cercana p {
+    color: #ccccdd !important;
+}
+
+body.dark #panel-cercana h4 {
+    color: #ffffff;
+}
