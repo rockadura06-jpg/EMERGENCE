@@ -462,3 +462,21 @@ body.dark #contenido-modal textarea {
 body.dark #btn-cancelar-modal {
     color: #ccccdd;
 }
+
+body.dark .leaflet-popup-content-wrapper {
+    background: #1a1a2e;
+    color: #ffffff;
+    border: 1px solid #2e2e4a;
+}
+
+body.dark .leaflet-popup-tip {
+    background: #1a1a2e;
+}
+
+body.dark .leaflet-popup-content b {
+    color: #ffffff;
+}
+
+body.dark .leaflet-popup-content small {
+    color: #ccccdd;
+}

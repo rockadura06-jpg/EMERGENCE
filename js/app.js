@@ -534,6 +534,7 @@ inputNickname.value = config.nickname;
 toggleDark.checked = config.darkMode;
 toggleNotif.checked = config.notificaciones;
 aplicarDarkMode(config.darkMode);
+aplicarTilesPorTema(config.darkMode);
 
 // Prellenar nickname en modal de reporte si existe
 if (config.nickname) {
