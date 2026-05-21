@@ -15,8 +15,8 @@ body.dark {
     --bg-header: #0a0a14;
     --bg-panel: #1a1a2e;
     --bg-tarjeta: #222235;
-    --text-primary: #e8e8f0;
-    --text-secondary: #9090aa;
+    --text-primary: #ffffff;
+    --text-secondary: #ccccdd;
     --border-color: #2e2e4a;
     --shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
@@ -410,4 +410,27 @@ section h3 {
     font-size: 0.75rem;
     color: #888;
     margin: 0;
+}
+
+body.dark section h3,
+body.dark .simbolo-subtitulo,
+body.dark .tarjeta-zona p,
+body.dark #logo p,
+body.dark #coordenadas-modal,
+body.dark #contenido-modal label {
+    color: #ccccdd;
+}
+
+body.dark .tarjeta-zona h4,
+body.dark .simbolo-titulo {
+    color: #ffffff;
+}
+
+body.dark #panel-cercana {
+    background: #1a1a2e;
+    color: #ffffff;
+}
+
+body.dark #panel-cercana p {
+    color: #ccccdd;
 }
