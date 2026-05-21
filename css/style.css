@@ -467,3 +467,7 @@ body.dark #contenido-modal textarea {
 body.dark #btn-cancelar-modal {
     color: #ccccdd;
 }
+
+body.dark #mapa img {
+    filter: invert(1) hue-rotate(180deg);
+}
