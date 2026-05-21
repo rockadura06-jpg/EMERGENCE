@@ -155,6 +155,7 @@ function aplicarTilesPorTema(darkMode) {
         ? '© OpenStreetMap © CARTO'
         : '© OpenStreetMap contributors';
     tileLayer = L.tileLayer(url, { attribution, subdomains: 'abcd', maxZoom: 19 }).addTo(mapa);
+    mapa.invalidateSize();
 }
 
 async function cargarZonasIniciales() {
@@ -501,7 +502,6 @@ function testPrecipitacion() {
 window.testPrecipitacion = testPrecipitacion;
 // Debug temporal: ELIMINAR
 
-// ── Configuración ──
 const CONFIG_KEY = 'emergence_config';
 
 function cargarConfig() {
