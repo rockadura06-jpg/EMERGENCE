@@ -180,6 +180,7 @@ async function cargarZonasIniciales() {
 function conectarSSE() {
     const sse = new EventSource('https://emergence-backend-id2q.onrender.com/sse/zonas');
     sse.onmessage = (event) => {
+        console.log('SSE conectado');
         const zonas = JSON.parse(event.data);
         if(zonas.length > 0){
             actualizarMapa(zonas);
