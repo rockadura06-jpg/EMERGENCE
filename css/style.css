@@ -1,7 +1,7 @@
 /* ── Variables de tema ── */
 :root {
     --bg-main: #ffffff;
-    --bg-header: #1a1a2e;
+    --bg-header: #ffffff;
     --bg-panel: #ffffff;
     --bg-tarjeta: #f9f9f9;
     --text-primary: #1a1a1a;
@@ -479,4 +479,12 @@ body.dark .leaflet-popup-content b {
 
 body.dark .leaflet-popup-content small {
     color: #ccccdd;
+}
+
+body:not(.dark) #logo h1 {
+    color: #1a1a1a;
+}
+
+body:not(.dark) #logo p {
+    color: #666;
 }
