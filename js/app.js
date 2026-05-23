@@ -453,9 +453,6 @@ async function cargarReportes() {
                 }
                 const likesGuardados = localStorage.getItem(`likes-${r.id}`);
                 const dislikesGuardados = localStorage.getItem(`dislikes-${r.id}`);
-
-                if (likesGuardados) document.getElementById(`likes-${r.id}`).textContent = `👍 (${likesGuardados})`;
-                if (dislikesGuardados) document.getElementById(`dislikes-${r.id}`).textContent = `👎 (${dislikesGuardados})`;
             })
         });
     } catch (err) {
